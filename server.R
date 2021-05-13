@@ -36,6 +36,16 @@ shinyServer(function(input, output) {
                                 binomial$num_sucesses)))
     })
     
+    output$posterior_dist <- renderUI({ 
+        p(withMathJax(sprintf("$$p(\\theta | y=%d) = p(\\theta) p(y=%d | \\theta) \\propto \\theta^{%d}(1-\\theta)^{%d -%d} $$", 
+                              binomial$num_sucesses,
+                              binomial$num_sucesses,
+                              binomial$num_sucesses,
+                              binomial$num_trials,
+                              binomial$num_sucesses)))
+    })
+    
+    
     #--- Generate data
     df <- reactive({
         # update
