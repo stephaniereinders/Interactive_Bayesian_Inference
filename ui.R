@@ -29,8 +29,9 @@ shinyUI(fluidPage(
             hr(),
             
             h4("Binomial Sampling Model"),
-            helpText("Because the trials are exchangeable, we can summarize our data by considering the total number
-                     of successes \\(y\\) in the \\(n\\) trials."),
+            helpText("We summarize our data by considering the total number
+                     of successes \\(y\\) in the \\(n\\) trials. (We assume that the \\(n\\) trials are conditionally
+                     independent given \\(\\theta\\).)"),
             textOutput("binom_num_trials"),
             textOutput("binom_num_sucesses"),
             uiOutput("binom_sampling_dist"),
@@ -49,7 +50,8 @@ shinyUI(fluidPage(
         ),
 
         mainPanel(
-            plotOutput("dotplot")
+            plotOutput("dotplot"),
+            plotOutput("binom_sampling_distplot")
         )
     )
 ))

@@ -7,8 +7,8 @@ shinyServer(function(input, output) {
                                 num_trials = 1,
                                 theta = 0.75)
     
-    binomial <- reactiveValues(num_trials = NULL,
-                               num_sucesses = NULL)
+    binomial <- reactiveValues(num_trials = 10,
+                               num_sucesses = 5)
     
     output$binom_num_trials <- renderText({
         # update
@@ -68,5 +68,21 @@ shinyServer(function(input, output) {
             coord_fixed(ylim = c(0, ymax/bernoulli$num_obs)) +  # fix y-axis
             scale_y_continuous(NULL, breaks=NULL)  # hide y-axis labels
     })
+    
+    #---
+    output$binom_sampling_distplot <- renderPlot({
+        successes <- seq(0, binomial$num_trials+2, by = 1)
+        probability <- dbinom(successes, size=binomial$num_trials, prob=(binomial$num_sucesses/binomial$num_trials))
+        df <- data.frame("successes" = successes, "probability" = probability)
+        
+        # Graph
+        ggplot(df, aes(x=successes, y=probability)) + 
+            geom_point() +
+            theme_bw()
+        
+    })
+    
+    
+    
 
 })
