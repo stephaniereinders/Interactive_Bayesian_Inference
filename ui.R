@@ -64,12 +64,11 @@ shinyUI(fluidPage(
             
             column(4,
                    h4("Posterior Distribution"),
-                   plotOutput("beta_distplot"),
+                   plotOutput("beta_distplot")
+            ),  # end column
             
-            column(12,
+            column(6, offset=3,
                    plotOutput("estimates")
-                
-            )
                    
                    
             )  # end column

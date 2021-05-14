@@ -141,11 +141,11 @@ shinyServer(function(input, output) {
         global_vars$posterior_mean <- global_vars$y_plus_1/global_vars$n_plus_2
         
         # Make dataframe
-        x <- c(global_vars$sample_proportion, global_vars$posterior_mean, global_vars$prior_mean)
-        x_labels <- c("sample proportion", "posterior mean", "prior mean")
+        x <- c(global_vars$prior_mean, global_vars$posterior_mean, global_vars$sample_proportion)
+        x_labels <- c("prior mean", "posterior mean", "sample proportion")
         y <- c(0, 0, 0)
         df <- data.frame("x" = x, "x_labels" = x_labels, "y" = y)
-        # df$x_labels <- factor(df$x_labels, levels = c("sample proportion", "posterior mean", "prior mean"))
+        df$x_labels <- factor(df$x_labels, levels = c("prior mean", "posterior mean", "sample proportion"))  # fix order in plot
         
         # Plot
         df %>% ggplot(aes(x=x, y=y)) + 
@@ -153,7 +153,7 @@ shinyServer(function(input, output) {
             geom_point(size=5, aes(color=x_labels, shape=x_labels)) + 
             theme_bw() + 
             scale_color_manual(values=RColorBrewer::brewer.pal(n=3, name="Dark2")) + 
-            coord_fixed(ylim = c(-0.005, 0.005)) +  # fix y-axis
+            coord_fixed(ylim = c(-0.025, 0.025)) +  # fix y-axis
             scale_y_continuous(NULL, breaks=NULL) +  # hide y-axis labels
             scale_x_continuous(NULL) +
             labs(color = "Estimate Type", shape = "Estimate Type") + 
