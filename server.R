@@ -69,7 +69,7 @@ shinyServer(function(input, output) {
             scale_y_continuous(NULL, breaks=NULL)  # hide y-axis labels
     })
     
-    #---
+    #--- Binomial Plot
     output$binom_sampling_distplot <- renderPlot({
         successes <- seq(0, binomial$num_trials+2, by = 1)
         probability <- dbinom(successes, size=binomial$num_trials, prob=(binomial$num_sucesses/binomial$num_trials))
@@ -79,10 +79,16 @@ shinyServer(function(input, output) {
         ggplot(df, aes(x=successes, y=probability)) + 
             geom_point() +
             theme_bw()
-        
     })
     
-    
+    output$beta_distplot <- renderPlot({
+        shape1 <- binomial$num_sucesses + 1
+        shape2 <- binomial$num_trials - binomial$num_sucesses + 1
+        
+        ggplot() +
+            geom_function(fun = dbeta, args = list(shape1, shape2)) +
+            theme_bw()
+    })
     
 
 })
