@@ -17,7 +17,7 @@ shinyUI(fluidPage(
         
         fluidRow(
             column(12,
-                   h4("Data"),
+                   h4("Generate Data"),
                    helpText("Our data consists of the results of a sequence of \\(n\\) (exchangeable) Bernoulli trials. 
                      The result of each trial is either success or failure."),
                    sliderInput("observations",
@@ -25,24 +25,30 @@ shinyUI(fluidPage(
                                min = 1,
                                max = 50,
                                value = 10),
+                   textOutput("binom_num_trials"),
+                   textOutput("binom_num_sucesses"),
+                   uiOutput("sample_proportion"),
+                   hr(),
+                   
+                   h4("Prior Distribution"),
+                   helpText("We assume that the prior distribution is the uniform distribution on the interval [0,1]"),
+                   helpText("Prior distribution: \\(p(\\theta) = 1\\)"),
+                   helpText("Prior mean: \\(\\frac{1}{2}\\)"),
                    hr(),
                    
                    h4("Likelihood Distribution"),
                    helpText("We summarize our data by considering the total number
                      of successes \\(y\\) in the \\(n\\) trials. (We assume that the \\(n\\) trials are conditionally
                      independent given \\(\\theta\\).)"),
-                   textOutput("binom_num_trials"),
-                   textOutput("binom_num_sucesses"),
                    uiOutput("binom_sampling_dist"),
                    hr(),
                    
-                   h4("Prior Distribution"),
-                   helpText("We assume that the prior distribution is the uniform distribution on the interval [0,1]. 
-                     $$p(\\theta) = 1$$"),
-                   hr(),
-                   
                    h4("Posterior Distribution"),
+                   helpText("The unnormalized posterior distribution is prior distribution multiplied by the 
+                            likelihood distribution. The posterior distribution takes the form of an unnormalized 
+                            beta distribution."),
                    uiOutput("posterior_dist"),
+                   uiOutput("posterior_mean"),
                    hr()
             ),  # end column
             
@@ -58,7 +64,7 @@ shinyUI(fluidPage(
             
             column(4,
                    h4("Posterior Distribution"),
-                   plotOutput("beta_distplot") 
+                   plotOutput("beta_distplot")
             )  # end column
         )  # end fluidRow 
     )  # end fluidPage
