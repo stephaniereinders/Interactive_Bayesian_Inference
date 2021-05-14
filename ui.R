@@ -26,7 +26,7 @@ shinyUI(fluidPage(
                                max = 50,
                                value = 10),
                    textOutput("binom_num_trials"),
-                   textOutput("binom_num_sucesses"),
+                   textOutput("binom_num_successes"),
                    uiOutput("sample_proportion"),
                    hr(),
                    
@@ -64,7 +64,14 @@ shinyUI(fluidPage(
             
             column(4,
                    h4("Posterior Distribution"),
-                   plotOutput("beta_distplot")
+                   plotOutput("beta_distplot"),
+            
+            column(12,
+                   plotOutput("estimates")
+                
+            )
+                   
+                   
             )  # end column
         )  # end fluidRow 
     )  # end fluidPage
