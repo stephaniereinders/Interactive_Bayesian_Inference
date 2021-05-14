@@ -17,9 +17,10 @@ shinyServer(function(input, output) {
     
     
     #--- DATA
-    # Generate data
+    # Simulate data
     df <- reactive({
         # update
+        global_vars$theta <- input$theta
         global_vars$n <- input$observations
         
         # Draw observations from a Bernouilli distribution.
@@ -41,6 +42,7 @@ shinyServer(function(input, output) {
     output$binom_num_successes <- renderText({
         # update
         global_vars$y <- dplyr::count(df(), observations)["n"][2,]
+        
         # display text
         paste("Number of successes in n trials:  y =", global_vars$y)
     })

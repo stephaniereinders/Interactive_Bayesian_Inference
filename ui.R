@@ -17,14 +17,19 @@ shinyUI(fluidPage(
         
         fluidRow(
             column(12,
-                   h4("Generate Data"),
+                   h4("Simulate Data"),
                    helpText("Our data consists of the results of a sequence of \\(n\\) (exchangeable) Bernoulli trials. 
                      The result of each trial is either success or failure."),
-                   sliderInput("observations",
-                               "Number of trials \\(n\\):",
+                   sliderInput(inputId = "observations",
+                               label = "Number of trials \\(n\\):",
                                min = 1,
                                max = 50,
                                value = 10),
+                   sliderInput(inputId = "theta",
+                               label = "True probability of success \\(\\theta\\) in each trial:",
+                               min = 0,
+                               max = 1,
+                               value = 0.5),
                    textOutput("binom_num_trials"),
                    textOutput("binom_num_successes"),
                    uiOutput("sample_proportion"),
