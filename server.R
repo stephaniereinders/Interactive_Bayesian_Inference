@@ -145,7 +145,7 @@ shinyServer(function(input, output) {
         x_labels <- c("prior mean", "posterior mean", "sample proportion")
         y <- c(0, 0, 0)
         df <- data.frame("x" = x, "x_labels" = x_labels, "y" = y)
-        df$x_labels <- factor(df$x_labels, levels = c("prior mean", "posterior mean", "sample proportion"))  # fix order in plot
+        df$x_labels <- factor(df$x_labels, levels = c("prior mean", "posterior mean", "sample proportion"))  # fix order in legend
         
         # Plot
         df %>% ggplot(aes(x=x, y=y)) + 
