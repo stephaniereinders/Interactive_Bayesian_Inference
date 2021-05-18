@@ -1,12 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
 # Define UI for application that draws a histogram
@@ -58,30 +49,36 @@ shinyUI(fluidPage(
                          plotOutput("dotplot"),
                          textOutput("binom_num_trials"),
                          textOutput("binom_num_successes")),
-                tabPanel("Estimate Parameter",
+                
+                tabPanel("Estimate Proportion of Bicycle Owners",
                          
+                         helpText("We will use Bayesian inference on our simulated data to estimate \\(\\theta\\)."),
                          
                          h4("Prior Distribution"),
-                         helpText("We assume that the prior distribution is the uniform distribution on the interval [0,1]"),
+                         helpText("(The prior distribution allows to account for prior knowledge about \\(\\theta\\)?)
+                                  Let's use the uniform distribution on the interval [0,1] as the prior distribution \\(p(\\theta)\\)."),
                          helpText("Prior distribution: \\(p(\\theta) = 1\\)"),
                          hr(),
                          
                          h4("Likelihood Distribution"),
-                         helpText("We summarize our data by considering the total number
-                     of successes \\(y\\) in the \\(n\\) trials. (We assume that the \\(n\\) trials are conditionally
-                     independent given \\(\\theta\\).)"),
+                         helpText("We can use a binomial distribution to model our data because of the assumptions we made."),
                          uiOutput("binom_sampling_dist"),
                          plotOutput("binom_sampling_distplot"),
                          hr(),
                          
                          h4("Posterior Distribution"),
-                         helpText("The unnormalized posterior distribution is prior distribution multiplied by the 
+                         helpText("The unnormalized posterior distribution is the prior distribution multiplied by the 
                             likelihood distribution. The posterior distribution takes the form of an unnormalized 
                             beta distribution."),
                          uiOutput("posterior_dist"),
                          plotOutput("beta_distplot"),
                          
                          h4("Estimates of \\(\\theta\\)"),
+                         helpText("We could use the sample proportion to estimate the true proportion \\(\\theta\\) of bicycle owners. 
+                                  (This estimate depends entirely on the data and does not use any prior knowledge that we incorporated in the
+                                  prior distribution?) On the other hand we could use the mean of the prior distribution to estimate \\(\\theta\\), 
+                                  but this doesn't use the data at all. The mean of the posterior distribution relies on the data and the prior distribution,
+                                  so it provides a (better?) estimate of \\(\\theta\\)."),
                          uiOutput("sample_proportion"),
                          helpText("Prior mean: \\(\\frac{1}{2}\\)"),
                          uiOutput("posterior_mean"),
