@@ -8,9 +8,8 @@ generateSingleParameterData <- function(sample_size_n, probability_theta){
 }
   
 
-makeDataDotplot <- function(df, sample_size_n, num_yes_y){
-  # Make a dotplot of the 
-  
+plotData <- function(df, sample_size_n, num_yes_y){
+  # Make a dotplot of the number of yes and no responses
   
   # Make max height proportional to num yes or num no, whichever is larger. (Each circle will be 1/n in diameter 
   # so total height of successes or failures circles will be y*(1/n) or (n-y)*(1/n)).) 
@@ -21,6 +20,7 @@ makeDataDotplot <- function(df, sample_size_n, num_yes_y){
     max_height <- num_no/sample_size_n
   }
   
+  # Make plot
   p <- ggplot(df, aes(observations)) + 
     geom_dotplot(binwidth = 1/sample_size_n) +  # make each dot 1/sample_size_n in diameter
     theme_bw() + 
@@ -30,13 +30,15 @@ makeDataDotplot <- function(df, sample_size_n, num_yes_y){
   return(p)
 }
 
-makeBinomialDistPlot <- function(sample_size_n, num_yes_y){
+plotBinomialDist <- function(sample_size_n, sample_proportion){
+  # Plot the binomial distribution with sample size n and probability equal to the sample proportion
+  
   # Generate a sequence of all possible numbers of yeses (I.e. 1, 2,...,n). 
   # Let the sequence go up to n+2 to just to make the plot look nicer.
   yeses <- seq(0, sample_size_n+2, by = 1)  
   
   # Calculate the probability of obtaining each number of yeses in n observations
-  probability <- dbinom(yeses, size=sample_size_n, prob=(num_yes_y/sample_size_n))
+  probability <- dbinom(yeses, size=sample_size_n, prob=sample_proportion)
   
   # Create data frame
   df <- data.frame("yeses" = yeses, "probability" = probability)

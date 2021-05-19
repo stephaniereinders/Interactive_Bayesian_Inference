@@ -52,7 +52,7 @@ shinyServer(function(input, output) {
     
     # Display dotplot of data
     output$dotplot <- renderPlot({
-        makeDataDotplot(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
+        plotData(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
     #--- Likelihood Distribution
@@ -69,7 +69,7 @@ shinyServer(function(input, output) {
     
     # Display binomial distribution plot
     output$binom_sampling_distplot <- renderPlot({
-        makeBinomialDistPlot(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
+        plotBinomialDist(sample_size_n = single_vars$n, sample_proportion = single_vars$sample_proportion)
     })
     
     #--- POSTERIOR DISTRIBUTION
