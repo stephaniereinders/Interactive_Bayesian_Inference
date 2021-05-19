@@ -35,7 +35,7 @@ shinyUI(
                          true probability \\(\\theta\\), but in practice when we perfom Bayesian inference we would not know the true probability."),
                 
                 helpText("Use the sliders below to generate data for various sample sizes and probabilities of dog ownership."),
-                sliderInput(inputId = "observations",
+                sliderInput(inputId = "single_n",
                             label = "Sample size \\(n\\):",
                             min = 1,
                             max = 50,
