@@ -23,13 +23,8 @@ shinyServer(function(input, output) {
         single_vars$theta <- input$single_theta
         single_vars$n <- input$single_n
         
+        # generate data in dataframe
         generateSingleParameterData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
-        
-        # # Draw single_n samples from a Bernouilli distribution.
-        # # Bernouilli distribution = Binomial distribution with n=1: p(x) = p^x(1-p)^(1-x)
-        # single_n <- stats::rbinom(n = single_vars$n, size = 1, prob=single_vars$theta)
-        # single_n <- as.factor(unlist(lapply(single_n, function(x) if (x==1){"success"} else {"failure"})))
-        # data.frame("single_n" = single_n)
     })
     
     # Count and display sample size
@@ -38,13 +33,13 @@ shinyServer(function(input, output) {
         paste("Sample size:  n =", single_vars$n)
     })
     
-    # Count and display number of successes
+    # Count and display number of yeses
     output$binom_num_successes <- renderText({
         # update
         single_vars$y <- dplyr::count(df(), observations)["n"][2,]
         
         # display text
-        paste("Number of successes in n trials:  y =", single_vars$y)
+        paste("Number of yeses in n observations:  y =", single_vars$y)
     })
     
     # Display sample proportion
@@ -57,20 +52,8 @@ shinyServer(function(input, output) {
     # Display dotplot of data
     output$dotplot <- renderPlot({
         
-        # Make max height proportional to num successes or num failures, whichever is larger. (Each circle will be 1/n in diameter 
-        # so total height of successes or failures circles will be y*(1/n) or (n-y)*(1/n)).) 
-        num_failures <- single_vars$n - single_vars$y
-        if (single_vars$y >= num_failures){
-            max_height <- single_vars$y/single_vars$n
-        } else {
-            max_height <- num_failures/single_vars$n
-        }
+        makeDataDotplot(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
 
-        ggplot(data=df(), aes(observations)) + 
-            geom_dotplot(binwidth = 1/single_vars$n) +  # make each dot 1/num_obs in diameter
-            theme_bw() + 
-            coord_fixed(ylim = c(0, max_height)) +  # fix y-axis
-            scale_y_continuous(NULL, breaks=NULL)  # hide y-axis labels
     })
     
     #--- LIKELIHOOD DISTRIBUTION
