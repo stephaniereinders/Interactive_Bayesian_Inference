@@ -1,9 +1,10 @@
 library(shiny)
 library(tidyverse)
+source("R/single_parameter.R")
 
 shinyServer(function(input, output) {
     
-    #--- GLOBAL VARIABLES
+    ###--- SINGLE PARAMETER MODEL ---###
     # Initialize and keep track of current variable values
     single_vars <- reactiveValues(theta = 0.75,
                                   n = 10,  # number of trials 
@@ -15,33 +16,32 @@ shinyServer(function(input, output) {
                                   posterior_mean = 6/12  # (y+1)/(n+2)
                                   )
     
-    
     #--- DATA
-    # Simulate data
+    # Generate data
     df <- reactive({
         # update
         single_vars$theta <- input$single_theta
         single_vars$n <- input$single_n
         
-        # Draw single_n from a Bernouilli distribution.
-        # Bernouilli distribution = Binomial distribution with n=1: p(x) = p^x(1-p)^(1-x)
-        single_n <- stats::rbinom(n = single_vars$n, 
-                                      size = 1, 
-                                      prob=single_vars$theta)
-        single_n <- as.factor(unlist(lapply(single_n, function(x) if (x==1){"success"} else {"failure"})))
-        data.frame("single_n" = single_n)
+        generateSingleParameterData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
+        
+        # # Draw single_n samples from a Bernouilli distribution.
+        # # Bernouilli distribution = Binomial distribution with n=1: p(x) = p^x(1-p)^(1-x)
+        # single_n <- stats::rbinom(n = single_vars$n, size = 1, prob=single_vars$theta)
+        # single_n <- as.factor(unlist(lapply(single_n, function(x) if (x==1){"success"} else {"failure"})))
+        # data.frame("single_n" = single_n)
     })
     
-    # Count and display number of trials
+    # Count and display sample size
     output$binom_num_trials <- renderText({
         # display text
-        paste("Number of trials:  n =", single_vars$n)
+        paste("Sample size:  n =", single_vars$n)
     })
     
     # Count and display number of successes
     output$binom_num_successes <- renderText({
         # update
-        single_vars$y <- dplyr::count(df(), single_n)["n"][2,]
+        single_vars$y <- dplyr::count(df(), observations)["n"][2,]
         
         # display text
         paste("Number of successes in n trials:  y =", single_vars$y)
@@ -66,13 +66,12 @@ shinyServer(function(input, output) {
             max_height <- num_failures/single_vars$n
         }
 
-        ggplot(data=df(), aes(single_n)) + 
+        ggplot(data=df(), aes(observations)) + 
             geom_dotplot(binwidth = 1/single_vars$n) +  # make each dot 1/num_obs in diameter
             theme_bw() + 
             coord_fixed(ylim = c(0, max_height)) +  # fix y-axis
             scale_y_continuous(NULL, breaks=NULL)  # hide y-axis labels
     })
-    
     
     #--- LIKELIHOOD DISTRIBUTION
     # Display binomial distribution formula
@@ -104,7 +103,6 @@ shinyServer(function(input, output) {
             theme_bw()
     })
     
-    
     #--- POSTERIOR DISTRIBUTION
     # Display posterior distribution formula
     output$posterior_dist <- renderUI({ 
@@ -134,7 +132,6 @@ shinyServer(function(input, output) {
                               single_vars$y_plus_1, 
                               single_vars$n_plus_2)))
     })
-    
     
     #--- ESTIMATES
     output$estimates <- renderPlot({
