@@ -60,3 +60,26 @@ plotBetaDist <- function(sample_size_n, num_yes_y){
   
   return(p)
 }
+
+plotSingleEstimates <- function(prior_mean, posterior_mean, sample_proportion){
+  # Make dataframe
+  x <- c(prior_mean, posterior_mean, sample_proportion)
+  x_labels <- c("prior mean", "posterior mean", "sample proportion")
+  y <- c(0, 0, 0)
+  df <- data.frame("x" = x, "x_labels" = x_labels, "y" = y)
+  df$x_labels <- factor(df$x_labels, levels = c("prior mean", "posterior mean", "sample proportion"))  # fix order in legend
+  
+  # Plot
+  p <- ggplot(df, aes(x=x, y=y)) + 
+    geom_hline(yintercept=0) + 
+    geom_point(size=5, aes(color=x_labels, shape=x_labels)) + 
+    theme_bw() + 
+    scale_color_manual(values=RColorBrewer::brewer.pal(n=3, name="Dark2")) + 
+    coord_fixed(ylim = c(-0.025, 0.025)) +  # fix y-axis
+    scale_y_continuous(NULL, breaks=NULL) +  # hide y-axis labels
+    scale_x_continuous(NULL) +
+    labs(color = "Estimate Type", shape = "Estimate Type") + 
+    theme(legend.position = "bottom")
+  
+  return(p)
+}

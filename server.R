@@ -43,13 +43,6 @@ shinyServer(function(input, output) {
         paste("Number of yeses in n observations:  y =", single_vars$y)
     })
     
-    # Display sample proportion
-    output$sample_proportion <- renderUI({ 
-        p(withMathJax(sprintf("Sample proportion: \\(\\frac{y}{n} = \\frac{%d}{%d} \\)", 
-                              single_vars$y,
-                              single_vars$n)))
-    })
-    
     # Display dotplot of data
     output$dotplot <- renderPlot({
         plotSingleData(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
@@ -88,7 +81,18 @@ shinyServer(function(input, output) {
         plotBetaDist(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
-    # Display posterior
+    
+    
+    #--- ESTIMATES
+    
+    # Display sample proportion
+    output$sample_proportion <- renderUI({ 
+        p(withMathJax(sprintf("Sample proportion: \\(\\frac{y}{n} = \\frac{%d}{%d} \\)", 
+                              single_vars$y,
+                              single_vars$n)))
+    })
+    
+    # Display posterior mean
     output$posterior_mean <- renderUI({
         # Update
         single_vars$y_plus_1 <- single_vars$y + 1
@@ -100,29 +104,15 @@ shinyServer(function(input, output) {
                               single_vars$n_plus_2)))
     })
     
-    #--- ESTIMATES
+    
+    # Plot estimates
     output$estimates <- renderPlot({
         # Update
         single_vars$sample_proportion <- single_vars$y/single_vars$n
         single_vars$posterior_mean <- single_vars$y_plus_1/single_vars$n_plus_2
         
-        # Make dataframe
-        x <- c(single_vars$prior_mean, single_vars$posterior_mean, single_vars$sample_proportion)
-        x_labels <- c("prior mean", "posterior mean", "sample proportion")
-        y <- c(0, 0, 0)
-        df <- data.frame("x" = x, "x_labels" = x_labels, "y" = y)
-        df$x_labels <- factor(df$x_labels, levels = c("prior mean", "posterior mean", "sample proportion"))  # fix order in legend
-        
-        # Plot
-        df %>% ggplot(aes(x=x, y=y)) + 
-            geom_hline(yintercept=0) + 
-            geom_point(size=5, aes(color=x_labels, shape=x_labels)) + 
-            theme_bw() + 
-            scale_color_manual(values=RColorBrewer::brewer.pal(n=3, name="Dark2")) + 
-            coord_fixed(ylim = c(-0.025, 0.025)) +  # fix y-axis
-            scale_y_continuous(NULL, breaks=NULL) +  # hide y-axis labels
-            scale_x_continuous(NULL) +
-            labs(color = "Estimate Type", shape = "Estimate Type") + 
-            theme(legend.position = "bottom")
+        plotSingleEstimates(prior_mean = single_vars$prior_mean, 
+                            posterior_mean = single_vars$posterior_mean, 
+                            sample_proportion = single_vars$sample_proportion)
     })
 })
