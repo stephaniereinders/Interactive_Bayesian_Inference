@@ -18,13 +18,23 @@ shinyServer(function(input, output) {
                                   posterior_mean = 6/12  # (y+1)/(n+2)
                                   )
     
+    # Update global variables with current user input
+    observe({
+        # Update directly from user input
+        single_vars$theta <- input$single_theta
+        single_vars$n <- input$single_n
+        single_vars$n_plus_2 <- single_vars$n + 2  # parameter for beta distribution
+        
+        # Update df from user input first to then update variable
+        single_vars$y <- dplyr::count(df(), observations)["n"][2,]
+        single_vars$y_plus_1 <- single_vars$y + 1  # parameter for beta distribution
+        single_vars$sample_proportion <- single_vars$y/single_vars$n
+        single_vars$posterior_mean <- single_vars$y_plus_1/single_vars$n_plus_2
+    })
+
     #--- Data
     # Generate data
     df <- reactive({
-        # update
-        single_vars$theta <- input$single_theta
-        single_vars$n <- input$single_n
-        
         # generate data in dataframe
         generateSingleData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
     })
@@ -36,11 +46,7 @@ shinyServer(function(input, output) {
     
     # Count and display number of yeses
     output$binom_num_yes_responses <- renderText({
-        # update global variable
-        single_vars$y <- dplyr::count(df(), observations)["n"][2,]
-        
-        # display text
-        paste("Number of yeses in n observations:  y =", single_vars$y)
+        paste("Number of yes responses in n observations:  y =", single_vars$y)
     })
     
     # Display dotplot of data
@@ -91,11 +97,6 @@ shinyServer(function(input, output) {
     
     # Display posterior mean
     output$posterior_mean <- renderUI({
-        # Update
-        single_vars$y_plus_1 <- single_vars$y + 1
-        single_vars$n_plus_2 <- single_vars$n + 2
-        
-        # Display
         p(withMathJax(sprintf("Posterior mean: \\(\\frac{y + 1}{n + 2} = \\frac{%d}{%d}\\)",
                               single_vars$y_plus_1, 
                               single_vars$n_plus_2)))
@@ -103,10 +104,6 @@ shinyServer(function(input, output) {
     
     # Plot estimates
     output$estimates <- renderPlot({
-        # Update
-        single_vars$sample_proportion <- single_vars$y/single_vars$n
-        single_vars$posterior_mean <- single_vars$y_plus_1/single_vars$n_plus_2
-        
         plotSingleEstimates(prior_mean = single_vars$prior_mean, 
                             posterior_mean = single_vars$posterior_mean, 
                             sample_proportion = single_vars$sample_proportion)
