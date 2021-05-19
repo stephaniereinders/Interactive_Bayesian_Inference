@@ -4,7 +4,7 @@ library(shiny)
 shinyUI(
   navbarPage("Bayesian Data Analysis",
     
-    #--- SINGLE PARAMETER MODEL TAB         
+    ###--- SINGLE-PARAMETER MODEL TAB ---########################################    
     tabPanel("Single Parameter Model",
 
         titlePanel("Single Parameter Model"),
@@ -90,7 +90,28 @@ shinyUI(
                              plotOutput("estimates"))
                 )  # end tabsetPanel
             )  # end mainPanel
-        ),  # end sidebarLayout
+        )  # end sidebarLayout
+    ),  # end tabPanel
+    
+    
+    ###--- MULTIPARAMETER MODEL TAB ---######################################## 
+    tabPanel("Multiparameter Model",
+             
+        titlePanel("Multiparameter Model"),
+        withMathJax(),
+        
+        #--- Sidebar
+        sidebarLayout(
+            sidebarPanel(
+                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 50, value = 10)
+            ),
+          
+            mainPanel(
+                uiOutput("multi_n")
+            )
+        )  # end sidebarLayout
+             
+             
     )  # end tabPanel
     
     

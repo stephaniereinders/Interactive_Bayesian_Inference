@@ -4,7 +4,7 @@ source("R/single_parameter.R")
 
 shinyServer(function(input, output) {
     
-    ###--- SINGLE PARAMETER MODEL ---###
+    ###--- SINGLE-PARAMETER MODEL ---########################################
     
     #--- Global Variables
     # Initialize and keep track of current variable values
@@ -81,10 +81,7 @@ shinyServer(function(input, output) {
         plotBetaDist(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
-    
-    
     #--- ESTIMATES
-    
     # Display sample proportion
     output$sample_proportion <- renderUI({ 
         p(withMathJax(sprintf("Sample proportion: \\(\\frac{y}{n} = \\frac{%d}{%d} \\)", 
@@ -104,7 +101,6 @@ shinyServer(function(input, output) {
                               single_vars$n_plus_2)))
     })
     
-    
     # Plot estimates
     output$estimates <- renderPlot({
         # Update
@@ -115,4 +111,24 @@ shinyServer(function(input, output) {
                             posterior_mean = single_vars$posterior_mean, 
                             sample_proportion = single_vars$sample_proportion)
     })
+    
+    
+    ###--- MULTIPARAMETER MODEL ---########################################
+    #--- More Global Variables
+    # Initialize and keep track of current variable values
+    multi_vars <- reactiveValues(n = 10
+    )
+    
+    # update multi_vars with current user input
+    observe({multi_vars$n <- input$multi_n})
+    
+    # Display sample size
+    output$multi_n <- renderUI({
+        p(withMathJax(sprintf("Sample size: \\(%d \\)", 
+                              multi_vars$n
+                              )))
+    })
+    
+    
+    
 })
