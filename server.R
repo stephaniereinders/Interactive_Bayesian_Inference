@@ -113,17 +113,22 @@ shinyServer(function(input, output) {
     ###--- MULTIPARAMETER MODEL ---########################################
     #--- More Global Variables
     # Initialize and keep track of current variable values
-    multi_vars <- reactiveValues(n = 10,
-                                 num_supportersA = 5
+    multi_vars <- reactiveValues(n = 50,
+                                 y1 = 25,
+                                 y2 = 20,
+                                 y3 = 5
     )
     
-    # update multi_vars with current user input
+    # update multi_vars and slider maximums with current user input
     observe({
         multi_vars$n <- input$multi_n
-        multi_vars$num_supportersA <- input$multi_num_supportersA
+        multi_vars$y1 <- input$multi_y1
+        multi_vars$y2 <- input$multi_y2
+        multi_vars$y3 <- input$multi_n - input$multi_y1 - input$multi_y2
         
-        # update slider input
-        updateSliderInput(inputId = "multi_num_supportersA", max = multi_vars$n)
+        # Update maximums on sliders
+        updateSliderInput(inputId = "multi_y1", max = input$multi_n)
+        updateSliderInput(inputId = "multi_y2", max = input$multi_n)
         })
     
     # Display sample size
@@ -131,9 +136,19 @@ shinyServer(function(input, output) {
         p(withMathJax(sprintf("Sample size: \\(%d \\)", multi_vars$n)))
     })
     
-    # Display candidate A supporters
-    output$multi_num_supportersA <- renderUI({
-        p(withMathJax(sprintf("Supporters of candidate A: \\(%d \\)", multi_vars$num_supportersA)))
+    # Display candidate A support
+    output$multi_y1 <- renderUI({
+        p(withMathJax(sprintf("Supports Candidate A: \\(%d\\)", multi_vars$y1)))
+    })
+    
+    # Display candidate B support
+    output$multi_y2 <- renderUI({
+        p(withMathJax(sprintf("Supports Candidate B: \\(%d\\)", multi_vars$y2)))
+    })
+    
+    # Display no opinion
+    output$multi_y3 <- renderUI({
+        p(withMathJax(sprintf("No Opinion: \\(%d\\)", multi_vars$y3)))
     })
     
     

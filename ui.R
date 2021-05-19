@@ -103,14 +103,23 @@ shinyUI(
         #--- Sidebar
         sidebarLayout(
             sidebarPanel(
-                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 50, value = 10),
-                sliderInput(inputId = "multi_num_supportersA", label = "Candidate A Supporters",
-                            min = 0, max = 10, value = 5)
+                h3("Survey"),
+                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 50),
+                
+                h4("Responses"),
+                sliderInput(inputId = "multi_y1", label = "Supports Candidate A",
+                            min = 0, max = 50, value = 25),
+                sliderInput(inputId = "multi_y2", label = "Supports Candidate B", 
+                            min = 0, max = 50, value = 20),
+                helpText("Adjust sliders so that 'No Opnion' is not a negative number."),
+                hr()
             ),
           
             mainPanel(
                 uiOutput("multi_n"),
-                uiOutput("multi_num_supportersA")
+                uiOutput("multi_y1"),
+                uiOutput("multi_y2"),
+                uiOutput("multi_y3")
             )
         )  # end sidebarLayout
              
