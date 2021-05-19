@@ -40,7 +40,7 @@ shinyUI(
                             min = 1,
                             max = 50,
                             value = 10),
-                sliderInput(inputId = "theta",
+                sliderInput(inputId = "single_theta",
                             label = "True probability of dog ownership \\(\\theta\\):",
                             min = 0,
                             max = 1,

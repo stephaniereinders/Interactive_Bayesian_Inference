@@ -20,7 +20,7 @@ shinyServer(function(input, output) {
     # Simulate data
     df <- reactive({
         # update
-        single_vars$theta <- input$theta
+        single_vars$theta <- input$single_theta
         single_vars$n <- input$single_n
         
         # Draw single_n from a Bernouilli distribution.
