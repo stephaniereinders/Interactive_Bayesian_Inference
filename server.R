@@ -26,7 +26,7 @@ shinyServer(function(input, output) {
         single_vars$n <- input$single_n
         
         # generate data in dataframe
-        generateSingleParameterData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
+        generateSingleData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
     })
     
     # Count and display sample size
@@ -35,7 +35,7 @@ shinyServer(function(input, output) {
     })
     
     # Count and display number of yeses
-    output$binom_num_successes <- renderText({
+    output$binom_num_yes_responses <- renderText({
         # update global variable
         single_vars$y <- dplyr::count(df(), observations)["n"][2,]
         
@@ -52,7 +52,7 @@ shinyServer(function(input, output) {
     
     # Display dotplot of data
     output$dotplot <- renderPlot({
-        plotData(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
+        plotSingleData(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
     #--- Likelihood Distribution
@@ -85,9 +85,7 @@ shinyServer(function(input, output) {
     
     # Display posterior distribution plot
     output$beta_distplot <- renderPlot({
-        ggplot() +
-            geom_function(fun = function(x) (x^single_vars$y)*(1-x)^(single_vars$n - single_vars$y)) +
-            theme_bw()
+        plotBetaDist(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
     # Display posterior

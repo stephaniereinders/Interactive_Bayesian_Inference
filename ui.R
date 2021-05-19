@@ -53,7 +53,7 @@ shinyUI(
                     tabPanel("Simulated Data",
                              plotOutput("dotplot"),
                              textOutput("binom_num_trials"),
-                             textOutput("binom_num_successes")),
+                             textOutput("binom_num_yes_responses")),
                     
                     tabPanel("Estimate Proportion of Bicycle Owners",
                              

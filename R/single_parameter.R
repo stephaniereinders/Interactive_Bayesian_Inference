@@ -1,4 +1,4 @@
-generateSingleParameterData <- function(sample_size_n, probability_theta){
+generateSingleData <- function(sample_size_n, probability_theta){
   # Draw sample_size_n samples from a Bernouilli distribution and return in a dataframe.
   # NOTE: Bernouilli distribution = Binomial distribution with n=1: p(x) = p^x(1-p)^(1-x)
   obs <- stats::rbinom(n = sample_size_n, size = 1, prob=probability_theta)
@@ -8,7 +8,7 @@ generateSingleParameterData <- function(sample_size_n, probability_theta){
 }
   
 
-plotData <- function(df, sample_size_n, num_yes_y){
+plotSingleData <- function(df, sample_size_n, num_yes_y){
   # Make a dotplot of the number of yes and no responses
   
   # Make max height proportional to num yes or num no, whichever is larger. (Each circle will be 1/n in diameter 
@@ -48,6 +48,15 @@ plotBinomialDist <- function(sample_size_n, sample_proportion){
     geom_point() +
     theme_bw() +
     xlab("number of yes responses")
+  
+  return(p)
+}
+
+plotBetaDist <- function(sample_size_n, num_yes_y){
+  # Plot the unnormalized beta distribution
+  p <- ggplot() +
+    geom_function(fun = function(x) (x^num_yes_y)*(1-x)^(sample_size_n - num_yes_y)) +
+    theme_bw()
   
   return(p)
 }
