@@ -116,7 +116,10 @@ shinyServer(function(input, output) {
     multi_vars <- reactiveValues(n = 50,
                                  y1 = 25,
                                  y2 = 20,
-                                 y3 = 5
+                                 y3 = 5,
+                                 theta1 = 25/50,
+                                 theta2 = 20/50,
+                                 theta3 = 5/50
     )
     
     # update multi_vars and slider maximums with current user input
@@ -125,6 +128,11 @@ shinyServer(function(input, output) {
         multi_vars$y1 <- input$multi_y1
         multi_vars$y2 <- input$multi_y2
         multi_vars$y3 <- input$multi_n - input$multi_y1 - input$multi_y2
+        
+        # Calculate theta
+        multi_vars$theta1 <- input$multi_y1/input$multi_n
+        multi_vars$theta2 <- input$multi_y2/input$multi_n
+        multi_vars$theta3 <- multi_vars$y3/input$multi_n
         
         # Update maximums on sliders
         updateSliderInput(inputId = "multi_y1", max = input$multi_n)
@@ -149,6 +157,21 @@ shinyServer(function(input, output) {
     # Display no opinion
     output$multi_y3 <- renderUI({
         p(withMathJax(sprintf("No Opinion: \\(%d\\)", multi_vars$y3)))
+    })
+    
+    # Display theta1
+    output$multi_theta1 <- renderUI({
+        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta1)))
+    })
+    
+    # Display theta2
+    output$multi_theta2 <- renderUI({
+        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta2)))
+    })
+    
+    # Display theta3
+    output$multi_theta3 <- renderUI({
+        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta3)))
     })
     
     

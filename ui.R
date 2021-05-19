@@ -119,7 +119,10 @@ shinyUI(
                 uiOutput("multi_n"),
                 uiOutput("multi_y1"),
                 uiOutput("multi_y2"),
-                uiOutput("multi_y3")
+                uiOutput("multi_y3"),
+                uiOutput("multi_theta1"),
+                uiOutput("multi_theta2"),
+                uiOutput("multi_theta3")
             )
         )  # end sidebarLayout
              
