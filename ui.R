@@ -103,11 +103,14 @@ shinyUI(
         #--- Sidebar
         sidebarLayout(
             sidebarPanel(
-                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 50, value = 10)
+                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 50, value = 10),
+                sliderInput(inputId = "multi_num_supportersA", label = "Candidate A Supporters",
+                            min = 0, max = 10, value = 5)
             ),
           
             mainPanel(
-                uiOutput("multi_n")
+                uiOutput("multi_n"),
+                uiOutput("multi_num_supportersA")
             )
         )  # end sidebarLayout
              

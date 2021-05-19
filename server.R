@@ -113,17 +113,27 @@ shinyServer(function(input, output) {
     ###--- MULTIPARAMETER MODEL ---########################################
     #--- More Global Variables
     # Initialize and keep track of current variable values
-    multi_vars <- reactiveValues(n = 10
+    multi_vars <- reactiveValues(n = 10,
+                                 num_supportersA = 5
     )
     
     # update multi_vars with current user input
-    observe({multi_vars$n <- input$multi_n})
+    observe({
+        multi_vars$n <- input$multi_n
+        multi_vars$num_supportersA <- input$multi_num_supportersA
+        
+        # update slider input
+        updateSliderInput(inputId = "multi_num_supportersA", max = multi_vars$n)
+        })
     
     # Display sample size
     output$multi_n <- renderUI({
-        p(withMathJax(sprintf("Sample size: \\(%d \\)", 
-                              multi_vars$n
-                              )))
+        p(withMathJax(sprintf("Sample size: \\(%d \\)", multi_vars$n)))
+    })
+    
+    # Display candidate A supporters
+    output$multi_num_supportersA <- renderUI({
+        p(withMathJax(sprintf("Supporters of candidate A: \\(%d \\)", multi_vars$num_supportersA)))
     })
     
     
