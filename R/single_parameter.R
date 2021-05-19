@@ -29,3 +29,23 @@ makeDataDotplot <- function(df, sample_size_n, num_yes_y){
   
   return(p)
 }
+
+makeBinomialDistPlot <- function(sample_size_n, num_yes_y){
+  # Generate a sequence of all possible numbers of yeses (I.e. 1, 2,...,n). 
+  # Let the sequence go up to n+2 to just to make the plot look nicer.
+  yeses <- seq(0, sample_size_n+2, by = 1)  
+  
+  # Calculate the probability of obtaining each number of yeses in n observations
+  probability <- dbinom(yeses, size=sample_size_n, prob=(num_yes_y/sample_size_n))
+  
+  # Create data frame
+  df <- data.frame("yeses" = yeses, "probability" = probability)
+  
+  # Graph
+  p <- ggplot(df, aes(x=yeses, y=probability)) + 
+    geom_point() +
+    theme_bw() +
+    xlab("number of yes responses")
+  
+  return(p)
+}

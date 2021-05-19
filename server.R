@@ -5,6 +5,8 @@ source("R/single_parameter.R")
 shinyServer(function(input, output) {
     
     ###--- SINGLE PARAMETER MODEL ---###
+    
+    #--- Global Variables
     # Initialize and keep track of current variable values
     single_vars <- reactiveValues(theta = 0.75,
                                   n = 10,  # number of trials 
@@ -16,7 +18,7 @@ shinyServer(function(input, output) {
                                   posterior_mean = 6/12  # (y+1)/(n+2)
                                   )
     
-    #--- DATA
+    #--- Data
     # Generate data
     df <- reactive({
         # update
@@ -29,13 +31,12 @@ shinyServer(function(input, output) {
     
     # Count and display sample size
     output$binom_num_trials <- renderText({
-        # display text
         paste("Sample size:  n =", single_vars$n)
     })
     
     # Count and display number of yeses
     output$binom_num_successes <- renderText({
-        # update
+        # update global variable
         single_vars$y <- dplyr::count(df(), observations)["n"][2,]
         
         # display text
@@ -51,12 +52,10 @@ shinyServer(function(input, output) {
     
     # Display dotplot of data
     output$dotplot <- renderPlot({
-        
         makeDataDotplot(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
-
     })
     
-    #--- LIKELIHOOD DISTRIBUTION
+    #--- Likelihood Distribution
     # Display binomial distribution formula
     output$binom_sampling_dist <- renderUI({ 
         p(withMathJax(sprintf("Likelihood distribution: \\(p(y=%d | \\theta) = \\binom{%d}{%d} \\theta^{%d}(1-\\theta)^{%d -%d} \\)", 
@@ -70,20 +69,7 @@ shinyServer(function(input, output) {
     
     # Display binomial distribution plot
     output$binom_sampling_distplot <- renderPlot({
-        # Generate a sequence of all possible numbers of successes (I.e. 1, 2,...,n). 
-        # Let the sequence go up to n+2 to just to make the plot look nicer.
-        successes <- seq(0, single_vars$n+2, by = 1)  
-        
-        # Calculate the probability of obtaining each number of successes in n trials
-        probability <- dbinom(successes, size=single_vars$n, prob=(single_vars$y/single_vars$n))
-        
-        # Create data frame
-        df <- data.frame("successes" = successes, "probability" = probability)
-        
-        # Graph
-        ggplot(df, aes(x=successes, y=probability)) + 
-            geom_point() +
-            theme_bw()
+        makeBinomialDistPlot(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
     })
     
     #--- POSTERIOR DISTRIBUTION
