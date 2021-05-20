@@ -128,6 +128,7 @@ shinyServer(function(input, output) {
         multi_vars$y1 <- input$multi_y1
         multi_vars$y2 <- input$multi_y2
         multi_vars$y3 <- input$multi_n - input$multi_y1 - input$multi_y2
+        multi_vars$voc <- c(multi_vars$y1, multi_vars$y_2, multi_vars$y_3)
         
         # Calculate theta
         multi_vars$theta1 <- input$multi_y1/input$multi_n
@@ -141,22 +142,27 @@ shinyServer(function(input, output) {
     
     # Display sample size
     output$multi_n <- renderUI({
-        p(withMathJax(sprintf("Sample size: \\(%d \\)", multi_vars$n)))
+        p(withMathJax(sprintf("Sample size: \\(n=%d \\)", multi_vars$n)))
     })
     
     # Display candidate A support
     output$multi_y1 <- renderUI({
-        p(withMathJax(sprintf("Supports Candidate A: \\(%d\\)", multi_vars$y1)))
+        p(withMathJax(sprintf("Supports Candidate A: \\(y_1=%d\\)", multi_vars$y1)))
     })
     
     # Display candidate B support
     output$multi_y2 <- renderUI({
-        p(withMathJax(sprintf("Supports Candidate B: \\(%d\\)", multi_vars$y2)))
+        p(withMathJax(sprintf("Supports Candidate B: \\(y_2=%d\\)", multi_vars$y2)))
     })
     
     # Display no opinion
     output$multi_y3 <- renderUI({
-        p(withMathJax(sprintf("No Opinion: \\(%d\\)", multi_vars$y3)))
+        p(withMathJax(sprintf("No Opinion: \\(y_3=%d\\)", multi_vars$y3)))
+    })
+    
+    # Display vector of counts
+    output$multi_voc <- renderUI({
+        p(withMathJax(sprintf("Vector of counts: \\(y=(%d, %d, %d)\\)", multi_vars$y1, multi_vars$y2, multi_vars$y3)))
     })
     
     # Display theta1
@@ -174,6 +180,19 @@ shinyServer(function(input, output) {
         p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta3)))
     })
     
+    # Display Multinomial Sampling Distribution
+    output$multi_sampling_dist <- renderUI({
+        p(withMathJax(sprintf("\\(p(y_1, y_2, y_3 | \\theta_1 = %0.02f, \\theta_2 = %0.02f, \\theta_3 = %0.02f) \\propto  (%0.02f)^{y_1} (%0.02f)^{y_2} (%0.02f)^{y_3}  \\)",
+                              multi_vars$theta1, multi_vars$theta2, multi_vars$theta3, multi_vars$theta1, multi_vars$theta2, multi_vars$theta3)))
+    })
+    
+    
+    # Display Likelihood Distribution
+    output$multi_likelihood_dist <- renderUI({
+        p(withMathJax(sprintf("\\(p(y_1 = %d, y_2 = %d, y_3 = %d | \\theta_1, \\theta_2, \\theta_3) \\propto  \\theta_1^{%d} \\theta_2^{%d}  \\theta_3^{%d}  \\)",
+                              multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3)))
+    })
+
     
     
 })

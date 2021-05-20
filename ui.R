@@ -116,13 +116,24 @@ shinyUI(
             ),
           
             mainPanel(
+                h4("The Data"),
                 uiOutput("multi_n"),
                 uiOutput("multi_y1"),
                 uiOutput("multi_y2"),
                 uiOutput("multi_y3"),
+                uiOutput("multi_voc"),
+                
+                h4("Sample Proportions"),
                 uiOutput("multi_theta1"),
                 uiOutput("multi_theta2"),
-                uiOutput("multi_theta3")
+                uiOutput("multi_theta3"),
+                
+                h4("Multinomial Sampling Distribution"),
+                uiOutput("multi_sampling_dist"),
+                
+                h4("Likelihood Distribution"),
+                uiOutput("multi_likelihood_dist")
+                
             )
         )  # end sidebarLayout
              
