@@ -140,44 +140,29 @@ shinyServer(function(input, output) {
         updateSliderInput(inputId = "multi_y2", max = input$multi_n)
         })
     
-    # Display sample size
-    output$multi_n <- renderUI({
-        p(withMathJax(sprintf("Sample size: \\(n=%d \\)", multi_vars$n)))
-    })
-    
-    # Display candidate A support
-    output$multi_y1 <- renderUI({
-        p(withMathJax(sprintf("Supports Candidate A: \\(y_1=%d\\)", multi_vars$y1)))
-    })
-    
-    # Display candidate B support
-    output$multi_y2 <- renderUI({
-        p(withMathJax(sprintf("Supports Candidate B: \\(y_2=%d\\)", multi_vars$y2)))
-    })
-    
     # Display no opinion
     output$multi_y3 <- renderUI({
-        p(withMathJax(sprintf("No Opinion: \\(y_3=%d\\)", multi_vars$y3)))
+        p(withMathJax(sprintf("%d", multi_vars$y3)))
     })
     
     # Display vector of counts
     output$multi_voc <- renderUI({
-        p(withMathJax(sprintf("Vector of counts: \\(y=(%d, %d, %d)\\)", multi_vars$y1, multi_vars$y2, multi_vars$y3)))
+        p(withMathJax(sprintf("\\(y=(%d, %d, %d)\\)", multi_vars$y1, multi_vars$y2, multi_vars$y3)))
     })
     
     # Display theta1
     output$multi_theta1 <- renderUI({
-        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta1)))
+        p(withMathJax(sprintf("Proportion of support for Candidate 1: \\( \\theta_1 =  %.03f\\)", multi_vars$theta1)))
     })
     
     # Display theta2
     output$multi_theta2 <- renderUI({
-        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta2)))
+        p(withMathJax(sprintf("Proportion of support for Candidate 2: \\(\\theta_2 =  %.03f\\)", multi_vars$theta2)))
     })
     
     # Display theta3
     output$multi_theta3 <- renderUI({
-        p(withMathJax(sprintf("\\(\\theta_1 =  %.03f\\)", multi_vars$theta3)))
+        p(withMathJax(sprintf("Proportion of no opinion: \\(\\theta_3 =  %.03f\\)", multi_vars$theta3)))
     })
     
     # Display Multinomial Sampling Distribution
@@ -195,12 +180,19 @@ shinyServer(function(input, output) {
     
     # Display Prior Distribution
     output$multi_prior_dist <- renderUI({
-        p(withMathJax(sprintf("\\(p(\\theta) \\propto  \\theta_1^{\\alpha_1 - 1} \\theta_2^{\\alpha_2 -1}  \\theta_3^{\\alpha_3 -1} \\ \\ \\  \\ with \\ \\alpha_1 = \\alpha_2 = \\alpha_3 = 1  \\)")))
+        p(withMathJax(sprintf("\\(p(\\theta) \\propto  \\theta_1^{\\alpha_1 - 1} \\theta_2^{\\alpha_2 -1}  \\theta_3^{\\alpha_3 -1}\\) 
+                              \n  with \\(\\alpha_1 = \\alpha_2 = \\alpha_3 = 1  \\)")))
+    })
+    
+    # Display Posterior Dirichlet
+    output$multi_posterior_dirichlet <- renderUI({
+        p(withMathJax(sprintf("\\( \\theta | y\\) ~ \\( Dirichlet(%d, %d, %d) \\)", 
+                              multi_vars$y1+1, multi_vars$y2+1 , multi_vars$y3+1)))
     })
     
     # Display Posterior Distribution
     output$multi_posterior_dist <- renderUI({
-        p(withMathJax(sprintf("\\(p(\\theta | y_1 = %d, y_2 = %d, y_3 = %d) \\propto  p(\\theta) p(y_1 = %d, y_2 = %d, y_3 = %d | \\theta) =
+        p(withMathJax(sprintf("\\(p(\\theta | y_1 = %d, y_2 = %d, y_3 = %d) \\propto 
                               \\theta_1^{%d} \\theta_2^{%d}  \\theta_3^{%d}\\)", 
                               multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3)))
     })

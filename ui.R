@@ -97,48 +97,61 @@ shinyUI(
     ###--- MULTIPARAMETER MODEL TAB ---######################################## 
     tabPanel("Multiparameter Model",
              
-        titlePanel("Multiparameter Model"),
+        titlePanel("Pre-Election Polling"),
         withMathJax(),
         
         #--- Sidebar
         sidebarLayout(
             sidebarPanel(
-                h3("Survey"),
-                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 1447),
+                p("Suppose a survey is conducted of \\(n\\) adults in the US during a presidential election year. All responses are grouped into
+                one of three categories: supports Candidate 1; supports Candidate 2; or expressed no opinion or supports another candidate. We will use the survey responses to estimate the 
+                true proportions \\(\\theta_1, \\theta_2\\) and \\(\\theta_3\\) of these three categories in the population."),
+                hr(),
                 
-                h4("Responses"),
-                sliderInput(inputId = "multi_y1", label = "Supports Candidate A",
+                h4("Survey Responses"),
+                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 1447),
+                sliderInput(inputId = "multi_y1", label = "Supports Candidate 1",
                             min = 0, max = 1447, value = 727),
-                sliderInput(inputId = "multi_y2", label = "Supports Candidate B", 
+                sliderInput(inputId = "multi_y2", label = "Supports Candidate 2", 
                             min = 0, max = 1447, value = 583),
-                helpText("Adjust sliders so that 'No Opnion' is not a negative number."),
-                hr()
-            ),
-          
-            mainPanel(
-                h4("The Data"),
-                uiOutput("multi_n"),
-                uiOutput("multi_y1"),
-                uiOutput("multi_y2"),
+                p(strong("No Opinion")),
                 uiOutput("multi_y3"),
+                helpText("Adjust sliders so that 'No Opnion' is not a negative number."),
+                p(strong("Vector of Counts")),
                 uiOutput("multi_voc"),
+                hr(),
                 
                 h4("Sample Proportions"),
                 uiOutput("multi_theta1"),
                 uiOutput("multi_theta2"),
                 uiOutput("multi_theta3"),
+                hr(),
                 
                 h4("Multinomial Sampling Distribution"),
+                p("The vector of counts \\(y\\) follows a multinomial distribution for the given sample proportions \\(\\theta\\)"),
                 uiOutput("multi_sampling_dist"),
+                hr(),
                 
                 h4("Likelihood Distribution"),
+                p("(We assume?) the true proportions \\(\\theta\\) follow a multinomial distribution for the given vector of counts \\(y\\)."),
                 uiOutput("multi_likelihood_dist"),
+                hr(),
                 
                 h4("Non-informative Uniform Prior Distribution"),
+                p("We use a non-informative uniform prior distribution."),
                 uiOutput("multi_prior_dist"),
+                h4(),
                 
                 h4("Posterior Distribution"),
+                uiOutput("multi_posterior_dirichlet"),
                 uiOutput("multi_posterior_dist")
+            ),
+          
+            mainPanel(
+                
+                
+                
+                
                 
             )
         )  # end sidebarLayout
