@@ -1,5 +1,7 @@
 library(shiny)
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(gtools)  # used for Dirichlet distribution
 source("R/single_parameter.R")
 
 shinyServer(function(input, output) {
@@ -171,7 +173,6 @@ shinyServer(function(input, output) {
                               multi_vars$theta1, multi_vars$theta2, multi_vars$theta3, multi_vars$theta1, multi_vars$theta2, multi_vars$theta3)))
     })
     
-    
     # Display Likelihood Distribution
     output$multi_likelihood_dist <- renderUI({
         p(withMathJax(sprintf("\\(p(y_1 = %d, y_2 = %d, y_3 = %d | \\theta) \\propto  \\theta_1^{%d} \\theta_2^{%d}  \\theta_3^{%d}  \\)",
@@ -205,13 +206,33 @@ shinyServer(function(input, output) {
         # Rename columns
         names(df) <- c("theta1", "theta2", "theta3")
         
-        # Calculate difference in support
-        df %>% dplyr::mutate(support_difference = theta1 - theta2)
+        # Calculate difference in support in each simulation
+        df <- df %>% dplyr::mutate(support_difference = theta1 - theta2)
+        
+        # Calculate which candidate is favored to win in each simulation
+        df["favored_to_win"] <- sapply(df$support_difference, function(x) if (x > 0) {"Candidate 1"} else if (x < 0){"Candidate 2"} else{"Tie"} )
+        
+        # Return dataframe
+        df
     })
     
     # Display first 6 simulations
     output$multi_simulation_table <- renderTable({
         head(multi_df())
+    })
+    
+    # Histogram of support difference
+    output$multi_simulation_hist <- renderPlot({
+        ggplot2::ggplot(multi_df(), aes(support_difference, fill=favored_to_win)) +
+            geom_histogram() +
+            theme_bw() 
+    })
+    
+    # Frequency plot support difference
+    output$multi_simulation_freq <- renderPlot({
+        ggplot2::ggplot(multi_df(), aes(support_difference)) +
+            geom_freqpoly(aes(color=favored_to_win)) +
+            theme_bw() 
     })
 
     

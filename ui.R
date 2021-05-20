@@ -155,8 +155,14 @@ shinyUI(
             ),
           
             mainPanel(
-                h4("First 6 Simulations"),
-                tableOutput("multi_simulation_table")
+                h4("First 6 Simulations out of 1000"),
+                tableOutput("multi_simulation_table"),
+                
+                h4("Histogram of Difference in Support (theta1 - theta2) in 1000 Simulations"),
+                plotOutput("multi_simulation_hist"),
+                
+                h4("Frequency Plot of Difference in Support (theta1 - theta2) in 1000 Simulations"),
+                plotOutput("multi_simulation_freq")
             )
         )  # end sidebarLayout
              
