@@ -104,13 +104,13 @@ shinyUI(
         sidebarLayout(
             sidebarPanel(
                 h3("Survey"),
-                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 50),
+                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 1447),
                 
                 h4("Responses"),
                 sliderInput(inputId = "multi_y1", label = "Supports Candidate A",
-                            min = 0, max = 50, value = 25),
+                            min = 0, max = 1447, value = 727),
                 sliderInput(inputId = "multi_y2", label = "Supports Candidate B", 
-                            min = 0, max = 50, value = 20),
+                            min = 0, max = 1447, value = 583),
                 helpText("Adjust sliders so that 'No Opnion' is not a negative number."),
                 hr()
             ),
@@ -132,7 +132,13 @@ shinyUI(
                 uiOutput("multi_sampling_dist"),
                 
                 h4("Likelihood Distribution"),
-                uiOutput("multi_likelihood_dist")
+                uiOutput("multi_likelihood_dist"),
+                
+                h4("Non-informative Uniform Prior Distribution"),
+                uiOutput("multi_prior_dist"),
+                
+                h4("Posterior Distribution"),
+                uiOutput("multi_posterior_dist")
                 
             )
         )  # end sidebarLayout
