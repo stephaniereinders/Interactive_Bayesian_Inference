@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(gtools)  # used for Dirichlet distribution
 source("R/single_parameter.R")
+source("R/multi_parameter.R")
 
 shinyServer(function(input, output) {
     
@@ -121,16 +122,22 @@ shinyServer(function(input, output) {
                                  y3 = 5,
                                  theta1 = 25/50,
                                  theta2 = 20/50,
-                                 theta3 = 5/50
+                                 theta3 = 5/50,
+                                 num_draws = 1000,
+                                 median = NULL,  # median of support difference in simulations
+                                 quantiles = NULL,  # 5th and 95th quantile of support difference in simulations
+                                 posterior_prob1 = NULL,  # estimated posterior probability that candidate 1 has more support than candidate 2
+                                 posterior_prob2 = NULL  # est. posterior prob. that candidate 2 has more support than 1
     )
     
-    # update multi_vars and slider maximums with current user input
+    # update global variables and slider maximums with current user input
     observe({
         multi_vars$n <- input$multi_n
         multi_vars$y1 <- input$multi_y1
         multi_vars$y2 <- input$multi_y2
         multi_vars$y3 <- input$multi_n - input$multi_y1 - input$multi_y2
         multi_vars$voc <- c(multi_vars$y1, multi_vars$y_2, multi_vars$y_3)
+        multi_vars$num_draws <- input$multi_simulation_draws
         
         # Calculate theta
         multi_vars$theta1 <- input$multi_y1/input$multi_n
@@ -138,9 +145,18 @@ shinyServer(function(input, output) {
         multi_vars$theta3 <- multi_vars$y3/input$multi_n
         
         # Update maximums on sliders
-        updateSliderInput(inputId = "multi_y1", max = input$multi_n)
-        updateSliderInput(inputId = "multi_y2", max = input$multi_n)
+        updateNumericInput(inputId = "multi_y1", max = input$multi_n)
+        updateNumericInput(inputId = "multi_y2", max = input$multi_n)
         })
+    
+    # Update global variables when multiSimulationButton is clicked
+    observeEvent(input$multiSimulationButton, {
+        df <- multi_df()
+        multi_vars$median <- median(df$support_difference)
+        multi_vars$quantiles <- quantile(df$support_difference, probs = c(0.05, 0.95))
+        multi_vars$posterior_prob1 <- 100*length(df$support_difference[df$support_difference > 0])/multi_vars$num_draws
+        multi_vars$posterior_prob2 <- 100*length(df$support_difference[df$support_difference < 0])/multi_vars$num_draws
+    })
     
     # Display no opinion
     output$multi_y3 <- renderUI({
@@ -154,27 +170,27 @@ shinyServer(function(input, output) {
     
     # Display theta1
     output$multi_theta1 <- renderUI({
-        p(withMathJax(sprintf("Proportion of support for Candidate 1: \\( \\theta_1 =  %.03f\\)", multi_vars$theta1)))
+        p(withMathJax(sprintf("Proportion of support for Candidate 1: \\( \\hat{\\theta}_1 =  %.03f\\)", multi_vars$theta1)))
     })
     
     # Display theta2
     output$multi_theta2 <- renderUI({
-        p(withMathJax(sprintf("Proportion of support for Candidate 2: \\(\\theta_2 =  %.03f\\)", multi_vars$theta2)))
+        p(withMathJax(sprintf("Proportion of support for Candidate 2: \\(\\hat{\\theta}_2 =  %.03f\\)", multi_vars$theta2)))
     })
     
     # Display theta3
     output$multi_theta3 <- renderUI({
-        p(withMathJax(sprintf("Proportion of no opinion: \\(\\theta_3 =  %.03f\\)", multi_vars$theta3)))
+        p(withMathJax(sprintf("Proportion of no opinion: \\(\\hat{\\theta}_3 =  %.03f\\)", multi_vars$theta3)))
     })
     
     # Display Multinomial Sampling Distribution
     output$multi_sampling_dist <- renderUI({
-        p(withMathJax(sprintf("\\(p(y | \\theta_1 = %0.02f, \\theta_2 = %0.02f, \\theta_3 = %0.02f) \\propto  (%0.02f)^{y_1} (%0.02f)^{y_2} (%0.02f)^{y_3}  \\)",
+        p(withMathJax(sprintf("\\(p(y |\\hat{\\theta}_1 = %0.02f, \\hat{\\theta}_2 = %0.02f, \\hat{\\theta}_3 = %0.02f) \\propto  (%0.02f)^{y_1} (%0.02f)^{y_2} (%0.02f)^{y_3}  \\)",
                               multi_vars$theta1, multi_vars$theta2, multi_vars$theta3, multi_vars$theta1, multi_vars$theta2, multi_vars$theta3)))
     })
     
-    # Display Likelihood Distribution
-    output$multi_likelihood_dist <- renderUI({
+    # Display Likelihood Function
+    output$multi_likelihood_func <- renderUI({
         p(withMathJax(sprintf("\\(p(y_1 = %d, y_2 = %d, y_3 = %d | \\theta) \\propto  \\theta_1^{%d} \\theta_2^{%d}  \\theta_3^{%d}  \\)",
                               multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3)))
     })
@@ -200,20 +216,7 @@ shinyServer(function(input, output) {
     
     # Run Simulation
     multi_df <- eventReactive(input$multiSimulationButton, {
-        # Draw 1000 points from Dirichlet distribution
-        df <- as.data.frame(gtools::rdirichlet(1000, c(multi_vars$y1 + 1, multi_vars$y2+1, multi_vars$y3+1)))
-        
-        # Rename columns
-        names(df) <- c("theta1", "theta2", "theta3")
-        
-        # Calculate difference in support in each simulation
-        df <- df %>% dplyr::mutate(support_difference = theta1 - theta2)
-        
-        # Calculate which candidate is favored to win in each simulation
-        df["favored_to_win"] <- sapply(df$support_difference, function(x) if (x > 0) {"Candidate 1"} else if (x < 0){"Candidate 2"} else{"Tie"} )
-        
-        # Return dataframe
-        df
+        runSimulations(multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$num_draws)
     })
     
     # Display first 6 simulations
@@ -223,18 +226,35 @@ shinyServer(function(input, output) {
     
     # Histogram of support difference
     output$multi_simulation_hist <- renderPlot({
-        ggplot2::ggplot(multi_df(), aes(support_difference, fill=favored_to_win)) +
+        ggplot2::ggplot(multi_df(), aes(support_difference)) +
             geom_histogram() +
+            geom_vline(xintercept=0, color="red") +
             theme_bw() 
     })
     
-    # Frequency plot support difference
-    output$multi_simulation_freq <- renderPlot({
-        ggplot2::ggplot(multi_df(), aes(support_difference)) +
-            geom_freqpoly(aes(color=favored_to_win)) +
-            theme_bw() 
+    # Display support difference median
+    output$multi_simulation_median <- renderUI({
+        p(withMathJax(sprintf("Median: \\(%0.03 f\\)", multi_vars$median)))
+    })
+    
+    # 5th and 95th quantiles
+    output$multi_simulation_quantile5 <- renderUI({
+        p(withMathJax(sprintf("5th quantile: \\(%f\\)", multi_vars$quantiles[1])))
+    })
+    
+    output$multi_simulation_quantile95 <- renderUI({
+        p(withMathJax(sprintf("95th quantile: \\(%f\\)", multi_vars$quantiles[2])))
+    })
+    
+    output$multi_simulation_posterior_prob1 <- renderUI({
+        p(withMathJax(sprintf("Estimated posterior probability that Candidate 1 has more support than 
+                              Candidate 2: \\(%0.03f\\)%%", multi_vars$posterior_prob1)))
+    })
+    
+    output$multi_simulation_posterior_prob2 <- renderUI({
+        p(withMathJax(sprintf("Estimated posterior probability that Candidate 2 has more support than 
+                              Candidate 1: \\(%0.03f\\)%%", multi_vars$posterior_prob2)))
     })
 
-    
     
 })

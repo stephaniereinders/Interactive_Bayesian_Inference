@@ -98,6 +98,7 @@ shinyUI(
     tabPanel("Multiparameter Model",
              
         titlePanel("Pre-Election Polling"),
+        p("This example is based on an example in Bayesian Data Analysis 3rd Edition by Chapman and Hall"),
         withMathJax(),
         
         #--- Sidebar
@@ -110,14 +111,15 @@ shinyUI(
                 hr(),
                 
                 h4("Survey Responses"),
-                sliderInput(inputId = "multi_n", label = "Sample size", min = 5, max = 5000, value = 1447),
-                sliderInput(inputId = "multi_y1", label = "Supports Candidate 1",
-                            min = 0, max = 1447, value = 727),
-                sliderInput(inputId = "multi_y2", label = "Supports Candidate 2", 
-                            min = 0, max = 1447, value = 583),
+                numericInput(inputId = "multi_n", label = "Sample size", 
+                             min = 5, max = 5000, value = 1447, step = 1),
+                numericInput(inputId = "multi_y1", label = "Supports Candidate 1",
+                            min = 0, max = 1447, value = 727, step = 1),
+                numericInput(inputId = "multi_y2", label = "Supports Candidate 2", 
+                            min = 0, max = 1447, value = 583, step = 1),
                 p(strong("No Opinion")),
                 uiOutput("multi_y3"),
-                helpText("Adjust sliders so that 'No Opnion' is not a negative number."),
+                helpText("Adjust candidate values so that 'No Opnion' is not a negative number."),
                 p(strong("Vector of Counts")),
                 uiOutput("multi_voc"),
                 hr(),
@@ -129,17 +131,17 @@ shinyUI(
                 hr(),
                 
                 h4("Multinomial Sampling Distribution"),
-                p("The vector of counts \\(y\\) follows a multinomial distribution for the given sample proportions \\(\\theta\\)"),
+                p("The vector of counts \\(y\\) follows a multinomial distribution for the given sample proportions \\(\\hat{\\theta}\\)"),
                 uiOutput("multi_sampling_dist"),
                 hr(),
                 
-                h4("Likelihood Distribution"),
-                p("(We assume?) the true proportions \\(\\theta\\) follow a multinomial distribution for the given vector of counts \\(y\\)."),
-                uiOutput("multi_likelihood_dist"),
+                h4("Likelihood Function"),
+                p("The true proportions \\(\\theta\\) follow a multinomial distribution for the given vector of counts \\(y\\)."),
+                uiOutput("multi_likelihood_func"),
                 hr(),
                 
                 h4("Non-informative Uniform Prior Distribution"),
-                p("We use a non-informative uniform prior distribution."),
+                p("We use a Dirichlet distribution as a non-informative uniform prior distribution."),
                 uiOutput("multi_prior_dist"),
                 hr(),
                 
@@ -149,27 +151,32 @@ shinyUI(
                 hr(),
                 
                 h4("Simulations"),
-                p("Draw 1000 points from the Dirichlet posterior distribution and calculate the support difference \\(\\theta_1 - \\theta_2\\)
+                p("Draw points from the Dirichlet posterior distribution and calculate the support difference \\(\\theta_1 - \\theta_2\\)
                   from each point."),
+                sliderInput(inputId = "multi_simulation_draws", label = "Draws", min = 500, max = 5000, value= 1000, step = 500),
                 actionButton(inputId = "multiSimulationButton", label = "Run Simulations")
             ),
           
             mainPanel(
-                h4("First 6 Simulations out of 1000"),
+                h3("First 6 Simulations out of 1000"),
                 tableOutput("multi_simulation_table"),
                 
-                h4("Histogram of Difference in Support (theta1 - theta2) in 1000 Simulations"),
+                h3("Difference in Support (theta1 - theta2) in 1000 Simulations"),
+                h4("Histogram"),
                 plotOutput("multi_simulation_hist"),
                 
-                h4("Frequency Plot of Difference in Support (theta1 - theta2) in 1000 Simulations"),
-                plotOutput("multi_simulation_freq")
-            )
+                h4("Median"),
+                uiOutput("multi_simulation_median"),
+                
+                h4("Quantiles"),
+                uiOutput("multi_simulation_quantile5"),
+                uiOutput("multi_simulation_quantile95"),
+                
+                h4("Estimated Posterior Probabilities"),
+                uiOutput("multi_simulation_posterior_prob1"),
+                uiOutput("multi_simulation_posterior_prob2")
+            )  # end mainPanel 
         )  # end sidebarLayout
-             
-             
     )  # end tabPanel
-    
-    
-    
   )  # end navbarPage
 )  # end shinyUI
