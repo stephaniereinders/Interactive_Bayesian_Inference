@@ -105,7 +105,8 @@ shinyUI(
             sidebarPanel(
                 p("Suppose a survey is conducted of \\(n\\) adults in the US during a presidential election year. All responses are grouped into
                 one of three categories: supports Candidate 1; supports Candidate 2; or expressed no opinion or supports another candidate. We will use the survey responses to estimate the 
-                true proportions \\(\\theta_1, \\theta_2\\) and \\(\\theta_3\\) of these three categories in the population."),
+                true proportions \\(\\theta_1, \\theta_2\\) and \\(\\theta_3\\) of these three categories in the population. In particular we want to 
+                esitmate the difference in support \\(\\theta_1 - \\theta_2\\) for Candidate 1 and Candidate 2. "),
                 hr(),
                 
                 h4("Survey Responses"),
@@ -140,19 +141,22 @@ shinyUI(
                 h4("Non-informative Uniform Prior Distribution"),
                 p("We use a non-informative uniform prior distribution."),
                 uiOutput("multi_prior_dist"),
-                h4(),
+                hr(),
                 
                 h4("Posterior Distribution"),
                 uiOutput("multi_posterior_dirichlet"),
-                uiOutput("multi_posterior_dist")
+                uiOutput("multi_posterior_dist"),
+                hr(),
+                
+                h4("Simulations"),
+                p("Draw 1000 points from the Dirichlet posterior distribution and calculate the support difference \\(\\theta_1 - \\theta_2\\)
+                  from each point."),
+                actionButton(inputId = "multiSimulationButton", label = "Run Simulations")
             ),
           
             mainPanel(
-                
-                
-                
-                
-                
+                h4("First 6 Simulations"),
+                tableOutput("multi_simulation_table")
             )
         )  # end sidebarLayout
              

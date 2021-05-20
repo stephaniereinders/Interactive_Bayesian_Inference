@@ -194,7 +194,24 @@ shinyServer(function(input, output) {
     output$multi_posterior_dist <- renderUI({
         p(withMathJax(sprintf("\\(p(\\theta | y_1 = %d, y_2 = %d, y_3 = %d) \\propto 
                               \\theta_1^{%d} \\theta_2^{%d}  \\theta_3^{%d}\\)", 
-                              multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1, multi_vars$y2, multi_vars$y3)))
+                              multi_vars$y1, multi_vars$y2, multi_vars$y3, multi_vars$y1+1, multi_vars$y2+1, multi_vars$y3+1)))
+    })
+    
+    # Run Simulation
+    multi_df <- eventReactive(input$multiSimulationButton, {
+        # Draw 1000 points from Dirichlet distribution
+        df <- as.data.frame(gtools::rdirichlet(1000, c(multi_vars$y1 + 1, multi_vars$y2+1, multi_vars$y3+1)))
+        
+        # Rename columns
+        names(df) <- c("theta1", "theta2", "theta3")
+        
+        # Calculate difference in support
+        df %>% dplyr::mutate(support_difference = theta1 - theta2)
+    })
+    
+    # Display first 6 simulations
+    output$multi_simulation_table <- renderTable({
+        head(multi_df())
     })
 
     
