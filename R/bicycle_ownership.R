@@ -1,4 +1,4 @@
-generateSingleData <- function(sample_size_n, probability_theta){
+generateBikeData <- function(sample_size_n, probability_theta){
   # Draw sample_size_n samples from a Bernouilli distribution and return in a dataframe.
   # NOTE: Bernouilli distribution = Binomial distribution with n=1: p(x) = p^x(1-p)^(1-x)
   obs <- stats::rbinom(n = sample_size_n, size = 1, prob=probability_theta)
@@ -8,7 +8,7 @@ generateSingleData <- function(sample_size_n, probability_theta){
 }
   
 
-plotSingleData <- function(df, sample_size_n, num_yes_y){
+plotBikeData <- function(df, sample_size_n, num_yes_y){
   # Make a dotplot of the number of yes and no responses
   
   # Make max height proportional to num yes or num no, whichever is larger. (Each circle will be 1/n in diameter 
@@ -61,7 +61,7 @@ plotBetaDist <- function(sample_size_n, num_yes_y){
   return(p)
 }
 
-plotSingleEstimates <- function(prior_mean, posterior_mean, sample_proportion){
+plotBikeEstimates <- function(prior_mean, posterior_mean, sample_proportion){
   # Make dataframe
   x <- c(prior_mean, posterior_mean, sample_proportion)
   x_labels <- c("prior mean", "posterior mean", "sample proportion")

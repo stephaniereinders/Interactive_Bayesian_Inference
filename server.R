@@ -2,16 +2,16 @@ library(shiny)
 library(ggplot2)
 library(dplyr)
 library(gtools)  # used for Dirichlet distribution
-source("R/single_parameter.R")
+source("R/bicycle_ownership.R")
 source("R/multi_parameter.R")
 
 shinyServer(function(input, output) {
     
-    ###--- SINGLE-PARAMETER MODEL ---########################################
+    ###--- BICYCLE OWNERSHIP MODEL ---########################################
     
     #--- Global Variables
     # Initialize and keep track of current variable values
-    single_vars <- reactiveValues(theta = 0.75,
+    bike_vars <- reactiveValues(theta = 0.75,
                                   n = 10,  # number of trials 
                                   y = 5,  # number of successes
                                   y_plus_1 = 6,  # parameter for beta distribution
@@ -24,92 +24,92 @@ shinyServer(function(input, output) {
     # Update global variables with current user input
     observe({
         # Update directly from user input
-        single_vars$theta <- input$single_theta
-        single_vars$n <- input$single_n
-        single_vars$n_plus_2 <- single_vars$n + 2  # parameter for beta distribution
+        bike_vars$theta <- input$bike_theta
+        bike_vars$n <- input$bike_n
+        bike_vars$n_plus_2 <- bike_vars$n + 2  # parameter for beta distribution
         
         # Update df from user input first to then update variable
-        single_vars$y <- dplyr::count(df(), observations)["n"][2,]
-        single_vars$y_plus_1 <- single_vars$y + 1  # parameter for beta distribution
-        single_vars$sample_proportion <- single_vars$y/single_vars$n
-        single_vars$posterior_mean <- single_vars$y_plus_1/single_vars$n_plus_2
+        bike_vars$y <- dplyr::count(bike_df(), observations)["n"][2,]
+        bike_vars$y_plus_1 <- bike_vars$y + 1  # parameter for beta distribution
+        bike_vars$sample_proportion <- bike_vars$y/bike_vars$n
+        bike_vars$posterior_mean <- bike_vars$y_plus_1/bike_vars$n_plus_2
     })
 
     #--- Data
     # Generate data
-    df <- reactive({
+    bike_df <- reactive({
         # generate data in dataframe
-        generateSingleData(sample_size_n = single_vars$n, probability_theta = single_vars$theta)
+        generateBikeData(sample_size_n = bike_vars$n, probability_theta = bike_vars$theta)
     })
     
     # Count and display sample size
-    output$binom_num_trials <- renderText({
-        paste("Sample size:  n =", single_vars$n)
+    output$bike_binom_num_trials <- renderText({
+        paste("Sample size:  n =", bike_vars$n)
     })
     
     # Count and display number of yeses
-    output$binom_num_yes_responses <- renderText({
-        paste("Number of yes responses in n observations:  y =", single_vars$y)
+    output$bike_binom_num_yes_responses <- renderText({
+        paste("Number of yes responses in n observations:  y =", bike_vars$y)
     })
     
     # Display dotplot of data
-    output$dotplot <- renderPlot({
-        plotSingleData(df = df(), sample_size_n = single_vars$n, num_yes_y = single_vars$y)
+    output$bike_dotplot <- renderPlot({
+        plotBikeData(df = bike_df(), sample_size_n = bike_vars$n, num_yes_y = bike_vars$y)
     })
     
     #--- Likelihood Distribution
     # Display binomial distribution formula
-    output$binom_sampling_dist <- renderUI({ 
+    output$bike_binom_sampling_dist <- renderUI({ 
         p(withMathJax(sprintf("Likelihood distribution: \\(p(y=%d | \\theta) = \\binom{%d}{%d} \\theta^{%d}(1-\\theta)^{%d -%d} \\)", 
-                                single_vars$y,
-                                single_vars$n,
-                                single_vars$y,
-                                single_vars$y,
-                                single_vars$n,
-                                single_vars$y)))
+                                bike_vars$y,
+                                bike_vars$n,
+                                bike_vars$y,
+                                bike_vars$y,
+                                bike_vars$n,
+                                bike_vars$y)))
     })
     
     # Display binomial distribution plot
-    output$binom_sampling_distplot <- renderPlot({
-        plotBinomialDist(sample_size_n = single_vars$n, sample_proportion = single_vars$sample_proportion)
+    output$bike_binom_sampling_distplot <- renderPlot({
+        plotBinomialDist(sample_size_n = bike_vars$n, sample_proportion = bike_vars$sample_proportion)
     })
     
     #--- POSTERIOR DISTRIBUTION
     # Display posterior distribution formula
-    output$posterior_dist <- renderUI({ 
+    output$bike_posterior_dist <- renderUI({ 
         p(withMathJax(sprintf("Posterior distribution: \\(p(\\theta | y=%d) = p(\\theta) p(y=%d | \\theta) \\propto \\theta^{%d}(1-\\theta)^{%d -%d} \\)", 
-                              single_vars$y,
-                              single_vars$y,
-                              single_vars$y,
-                              single_vars$n,
-                              single_vars$y)))
+                              bike_vars$y,
+                              bike_vars$y,
+                              bike_vars$y,
+                              bike_vars$n,
+                              bike_vars$y)))
     })
     
     # Display posterior distribution plot
-    output$beta_distplot <- renderPlot({
-        plotBetaDist(sample_size_n = single_vars$n, num_yes_y = single_vars$y)
+    output$bike_beta_distplot <- renderPlot({
+        plotBetaDist(sample_size_n = bike_vars$n, num_yes_y = bike_vars$y)
     })
     
     #--- ESTIMATES
     # Display sample proportion
-    output$sample_proportion <- renderUI({ 
+    output$bike_sample_proportion <- renderUI({ 
         p(withMathJax(sprintf("Sample proportion: \\(\\frac{y}{n} = \\frac{%d}{%d} \\)", 
-                              single_vars$y,
-                              single_vars$n)))
+                              bike_vars$y,
+                              bike_vars$n)))
     })
     
     # Display posterior mean
-    output$posterior_mean <- renderUI({
+    output$bike_posterior_mean <- renderUI({
         p(withMathJax(sprintf("Posterior mean: \\(\\frac{y + 1}{n + 2} = \\frac{%d}{%d}\\)",
-                              single_vars$y_plus_1, 
-                              single_vars$n_plus_2)))
+                              bike_vars$y_plus_1, 
+                              bike_vars$n_plus_2)))
     })
     
     # Plot estimates
-    output$estimates <- renderPlot({
-        plotSingleEstimates(prior_mean = single_vars$prior_mean, 
-                            posterior_mean = single_vars$posterior_mean, 
-                            sample_proportion = single_vars$sample_proportion)
+    output$bike_estimates <- renderPlot({
+        plotBikeEstimates(prior_mean = bike_vars$prior_mean, 
+                            posterior_mean = bike_vars$posterior_mean, 
+                            sample_proportion = bike_vars$sample_proportion)
     })
     
     
