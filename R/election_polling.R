@@ -1,4 +1,4 @@
-runSimulations <- function(y1, y2, y3, num_draws){
+runElectionSimulations <- function(y1, y2, y3, num_draws){
   # Draw 1000 points from Dirichlet distribution
   df <- as.data.frame(gtools::rdirichlet(num_draws, c(y1 + 1, y2+1, y3+1)))
   
@@ -9,4 +9,11 @@ runSimulations <- function(y1, y2, y3, num_draws){
   df <- df %>% dplyr::mutate(support_difference = theta1 - theta2)
   
   return(df)
+}
+
+plotElectionSupportDifference <- function(df){
+  ggplot2::ggplot(df, aes(support_difference)) +
+    geom_histogram() +
+    geom_vline(xintercept=0, color="red") +
+    theme_bw() 
 }
