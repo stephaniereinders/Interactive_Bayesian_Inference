@@ -7,31 +7,41 @@ shinyUI(
     ###--- BICYCLE OWNERSHIP TAB ---########################################    
     tabPanel("Bicycle Ownership Example",
 
-        titlePanel("Estimating the Proportion of Bicycle Owners"),
+        titlePanel("Estimating the Proportion of Bicycle Owners in Ames, Iowa"),
         p("This example is based on an example of estimating female birth in Bayesian Data Analysis 3rd Edition by Chapman and Hall."),
         withMathJax(),
         
         #--- SIDEBAR    
         sidebarLayout(
             sidebarPanel(
-                p("Suppose we want to estimate the proportion \\(\\theta\\) of Ames residents that own a bicycle. 
-                        Let's make several assumptions in order to simplify this problem."),
-                p(strong("Assumption 1:"), "the probability of bicycle ownership is exactly the same for each resident."),
-                p(strong("Assumption 2:"), "whether a resident owns a bicycle is independent of whether any other resident owns a bicycle."),
-                p("We could ask each resident in a sample of \\(n\\) Ames residents whether or not they own a dog. 
-                        Two outcomes are possible, either 'Yes' or 'No.' Let \\(x_i\\) be the response of resident \\(i\\). 
-                        Our data \\(x_1, x_2,...,x_n\\) can be thought of as a sequence of Bernouilli trials because of the assumptions 
-                        that we made."),
-                p("Our end goal is to estimate the proportion \\(\\theta\\) of residents that own a bike. We could let \\(y\\) be the number of bicycle owners
-                         in our sample, and then use the sample proportion \\(y/n\\) to estimate \\(\\theta\\). But Bayesian inference will give us a 
-                         (better? more accurate?) estimate."),
+                h4("What proportion of residents in Ames own a bicycle?"),
+                p("We want to estimate the proportion \\(\\theta\\) of bicycle owners in Ames."),
                 
-                h4("Generate Simulated Data"),
+                
+                
+                h4("Survey"),
+                p("Instead of surveying every single Ames resident, we could ask a random sample of  \\(n\\) residents whether or not they own
+                 a bicycle."),
+                
+                h4("The Data"),
+                p("The response of each resident in the survey sample is either 'yes' or 'no'. Denote the response of resident \\(i\\) as 
+                  \\(x_i\\) for \\(i=1, 2,..., n\\). We can model the data \\(x_1, \\ x_2,..., \\ x_n\\) as a sequence of Bernoulli trials
+                  if we make two assumptions:"),
+                p(strong("Assumption 1:"), "The probability of bicycle ownership is exactly the same for each resident."),
+                p(strong("Assumption 2:"), "Whether a resident owns a bicycle is independent of whether any other resident owns a bicycle."),
+                
+                
+                
+                p("Our end goal is to estimate the proportion \\(\\theta\\) of residents that own a bike. 
+                  We could let \\(y\\) be the number of bicycle owners in our sample, and then use the sample proportion 
+                  \\(y/n\\) to estimate \\(\\theta\\). But Bayesian inference will give us a 
+                  (better? more accurate?) estimate."),
+                
+                h4("Generate Simulated Survey Responses"),
                 p("In order to illustrate how Bayesian inference works on different data, let's simulate the results of asking a sample of \\(n\\) 
-                         Ames residents whether they own a bicycle by performing \\(n\\) Bernouilli trials. This Shiny App uses a built in statistical function 
-                         to draw random samples from a Bernouilli distribution. We need to tell this function the sample size \\(n\\) and the (true) probability 
-                         \\(\\theta\\) that a resident owns a bicycle. It's important to note that because we are generating the data ourselves we know the 
-                         true probability \\(\\theta\\), but in practice when we perfom Bayesian inference we would not know the true probability."),
+                  Ames residents whether they own a bicycle by performing \\(n\\) Bernouilli trials."),
+                  
+                
                 
                 p("Use the sliders below to generate data for various sample sizes and probabilities of bicycle ownership."),
                 sliderInput(inputId = "bike_n",
@@ -40,19 +50,24 @@ shinyUI(
                             max = 50,
                             value = 10),
                 sliderInput(inputId = "bike_theta",
-                            label = "True probability of dog ownership \\(\\theta\\):",
+                            label = "True probability of bicycle ownership \\(\\theta\\):",
                             min = 0,
                             max = 1,
                             value = 0.5),
+                
+                p("This Shiny App uses a built in statistical function to draw random samples from a Bernouilli distribution. We need to tell this 
+                  function the sample size \\(n\\) and the (true) probability \\(\\theta\\) that a resident owns a bicycle. It's important to note 
+                  that because we are generating the data ourselves we know the true probability \\(\\theta\\), but in practice when we perfom 
+                  Bayesian inference we would not know the true probability."),
             ),  # end sidebarPanel
             
             #--- MAIN PANEL
             mainPanel(
                 tabsetPanel(
                     tabPanel("Simulated Data",
+                             p("---Add description of dotplot.---"),
                              plotOutput("bike_dotplot"),
-                             textOutput("binom_num_trials"),
-                             textOutput("binom_num_yes_responses")),
+                    ),  # end tabPanel
                     
                     tabPanel("Estimate Proportion of Bicycle Owners",
                              
@@ -86,7 +101,8 @@ shinyUI(
                              uiOutput("bike_sample_proportion"),
                              p("Prior mean: \\(\\frac{1}{2}\\)"),
                              uiOutput("bike_posterior_mean"),
-                             plotOutput("bike_estimates"))
+                             plotOutput("bike_estimates")
+                    )  # end tabPanel
                 )  # end tabsetPanel
             )  # end mainPanel
         )  # end sidebarLayout
@@ -161,15 +177,13 @@ shinyUI(
                 tableOutput("election_simulation_table"),
                 
                 h3("Difference in Support (theta1 - theta2) in 1000 Simulations"),
-                h4("Histogram"),
                 plotOutput("election_simulation_hist"),
                 
                 h4("Median"),
                 uiOutput("election_simulation_median"),
                 
-                h4("Quantiles"),
-                uiOutput("election_simulation_quantile5"),
-                uiOutput("election_simulation_quantile95"),
+                h4("Credible set"),
+                uiOutput("election_simulation_credible_set"),
                 
                 h4("Estimated Posterior Probabilities"),
                 uiOutput("election_simulation_posterior_prob1"),

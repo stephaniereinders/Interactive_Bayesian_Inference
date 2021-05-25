@@ -11,9 +11,19 @@ runElectionSimulations <- function(y1, y2, y3, num_draws){
   return(df)
 }
 
-plotElectionSupportDifference <- function(df){
+plotElectionSupportDifference <- function(df, median){
+  
+  x <- c(0, median)
+  labels <- c("Tie in support", "Median")
+  line_df <- data.frame("x"=x, "label"=labels)
+  
   ggplot2::ggplot(df, aes(support_difference)) +
     geom_histogram() +
-    geom_vline(xintercept=0, color="red") +
-    theme_bw() 
+    geom_vline(data = line_df, aes(xintercept=x, color=label, linetype=label)) +
+    theme_bw() + 
+    theme(legend.position="bottom") +
+    labs(color = "Values of Interest", linetype = "Values of Interest") + 
+    xlab("Difference in Support") + 
+    ylab("Count")
+    
 }

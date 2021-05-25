@@ -152,7 +152,7 @@ shinyServer(function(input, output) {
     observeEvent(input$multiSimulationButton, {
         df <- election_df()
         election_vars$median <- median(df$support_difference)
-        election_vars$quantiles <- quantile(df$support_difference, probs = c(0.05, 0.95))
+        election_vars$quantiles <- quantile(df$support_difference, probs = c(0.025, 0.975))
         election_vars$posterior_prob1 <- 100*length(df$support_difference[df$support_difference > 0])/election_vars$num_draws
         election_vars$posterior_prob2 <- 100*length(df$support_difference[df$support_difference < 0])/election_vars$num_draws
     })
@@ -225,7 +225,7 @@ shinyServer(function(input, output) {
     
     # Histogram of support difference
     output$election_simulation_hist <- renderPlot({
-        plotElectionSupportDifference(df = election_df())
+        plotElectionSupportDifference(df = election_df(), median = election_vars$median)
     })
     
     # Display support difference median
@@ -233,13 +233,9 @@ shinyServer(function(input, output) {
         p(withMathJax(sprintf("Median: \\(%0.03 f\\)", election_vars$median)))
     })
     
-    # 5th and 95th quantiles
-    output$election_simulation_quantile5 <- renderUI({
-        p(withMathJax(sprintf("5th quantile: \\(%f\\)", election_vars$quantiles[1])))
-    })
-    
-    output$election_simulation_quantile95 <- renderUI({
-        p(withMathJax(sprintf("95th quantile: \\(%f\\)", election_vars$quantiles[2])))
+    # Credible set
+    output$election_simulation_credible_set <- renderUI({
+        p("95% credible set:", withMathJax(sprintf("(%0.03f, %0.03f)", election_vars$quantiles[1], election_vars$quantiles[2] )))
     })
     
     output$election_simulation_posterior_prob1 <- renderUI({
@@ -253,7 +249,7 @@ shinyServer(function(input, output) {
     })
 
     
-    ###--- BICYCLE OWNERSHIP EXAMPLE ---########################################
+    ###--- BIOASSAY EXAMPLE ---########################################
     
     # Create data
     bio_df <- reactive({
@@ -272,10 +268,4 @@ shinyServer(function(input, output) {
                              "Number of animals, ni" = "ni",
                              "Number of deaths, yi" = "yi")
     })
-    
-    
-    
-    
-    
-    
 })
