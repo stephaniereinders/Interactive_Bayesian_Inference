@@ -64,15 +64,15 @@ shinyUI(
                              p("Prior distribution: \\(p(\\theta) = 1\\)"),
                              hr(),
                              
-                             h4("Likelihood Distribution"),
-                             p("We can use a binomial distribution to model our data (because of the assumptions we made?)."),
+                             h4("Likelihood Function"),
+                             p("Our data follows a binomial distribution."),
                              uiOutput("bike_binom_sampling_dist"),
                              plotOutput("bike_binom_sampling_distplot"),
                              hr(),
                              
                              h4("Posterior Distribution"),
                              p("The unnormalized posterior distribution is the prior distribution multiplied by the 
-                                likelihood distribution. The posterior distribution takes the form of an unnormalized 
+                                likelihood function. The posterior distribution takes the form of an unnormalized 
                                 beta distribution."),
                              uiOutput("bike_posterior_dist"),
                              plotOutput("bike_beta_distplot"),
@@ -176,6 +176,28 @@ shinyUI(
                 uiOutput("election_simulation_posterior_prob2")
             )  # end mainPanel 
         )  # end sidebarLayout
+    ),  # end tabPanel
+    
+    ###--- PRE-ELECTION POLLING TAB ---######################################## 
+    tabPanel("Bioassay Example",
+        
+        titlePanel("Bioassay Example"),
+        p("This example is based on an example in Bayesian Data Analysis 3rd Edition by Chapman and Hall."),
+        withMathJax(),
+             
+        #--- Sidebar
+        sidebarLayout(
+          sidebarPanel(
+            
+          ),  # end sidebarPanel
+          
+          mainPanel(
+            h4("Data"),
+            tableOutput("bio_df")
+          )  # end mainPanel
+        )  # end sidebarLayout
     )  # end tabPanel
+    
+    
   )  # end navbarPage
 )  # end shinyUI

@@ -7,8 +7,7 @@ source("R/election_polling.R")
 
 shinyServer(function(input, output) {
     
-    ###--- BICYCLE OWNERSHIP MODEL ---########################################
-    
+    ###--- BICYCLE OWNERSHIP EXAMPLE ---########################################
     #--- Global Variables
     # Initialize and keep track of current variable values
     bike_vars <- reactiveValues(theta = 0.75,
@@ -60,7 +59,7 @@ shinyServer(function(input, output) {
     #--- Likelihood Distribution
     # Display binomial distribution formula
     output$bike_binom_sampling_dist <- renderUI({ 
-        p(withMathJax(sprintf("Likelihood distribution: \\(p(y=%d | \\theta) = \\binom{%d}{%d} \\theta^{%d}(1-\\theta)^{%d -%d} \\)", 
+        p(withMathJax(sprintf("Likelihood function: \\(p(y=%d | \\theta) = \\binom{%d}{%d} \\theta^{%d}(1-\\theta)^{%d -%d} \\)", 
                                 bike_vars$y,
                                 bike_vars$n,
                                 bike_vars$y,
@@ -113,7 +112,7 @@ shinyServer(function(input, output) {
     })
     
     
-    ###--- MULTIPARAMETER MODEL ---########################################
+    ###--- PREELECTION POLLING EXAMPLE ---########################################
     #--- More Global Variables
     # Initialize and keep track of current variable values
     election_vars <- reactiveValues(n = 50,
@@ -253,5 +252,30 @@ shinyServer(function(input, output) {
                               Candidate 1: \\(%0.03f\\)%%", election_vars$posterior_prob2)))
     })
 
+    
+    ###--- BICYCLE OWNERSHIP EXAMPLE ---########################################
+    
+    # Create data
+    bio_df <- reactive({
+        # NOTE: doesn't react to any inputs
+        xi <- c(-0.86, -0.30, -0.05, 0.73)
+        ni <- c(5, 5, 5, 5)
+        yi <- c(0, 1, 3, 5)
+        df <- data.frame("xi" = xi, "ni" = ni, "yi" = yi)
+    })
+    
+    # Display data
+    output$bio_df <- renderTable({
+        df <- bio_df()
+        # give 'nice' column names
+        df %>% dplyr::rename("Dose, xi (log g/ml)" = "xi",
+                             "Number of animals, ni" = "ni",
+                             "Number of deaths, yi" = "yi")
+    })
+    
+    
+    
+    
+    
     
 })
