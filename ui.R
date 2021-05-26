@@ -166,17 +166,17 @@ shinyUI(
                 hr(),
                 
                 h4("Simulations"),
-                p("Draw points from the Dirichlet posterior distribution and calculate the support difference \\(\\theta_1 - \\theta_2\\)
+                p("Draw points from the Dirichlet posterior distribution and calculate the support difference \\(\\hat{\\theta}_1 - \\hat{\\theta}_2\\)
                   from each point."),
                 sliderInput(inputId = "election_simulation_draws", label = "Draws", min = 500, max = 5000, value= 1000, step = 500),
                 actionButton(inputId = "multiSimulationButton", label = "Run Simulations")
             ),
           
             mainPanel(
-                h3("First 6 Simulations out of 1000"),
+                h3("First 6 Simulations"),
                 tableOutput("election_simulation_table"),
                 
-                h3("Difference in Support (theta1 - theta2) in 1000 Simulations"),
+                h3("Support Difference in Simulations"),
                 plotOutput("election_simulation_hist"),
                 
                 h4("Median"),
