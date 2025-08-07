@@ -28,8 +28,6 @@ shinyUI(
                 p(strong("Assumption 1:"), "The probability of bicycle ownership is exactly the same for each resident."),
                 p(strong("Assumption 2:"), "Whether a resident owns a bicycle is independent of whether any other resident owns a bicycle."),
                 
-                
-                
                 p("Our end goal is to estimate the proportion \\(\\theta\\) of residents that own a bike. 
                   We could let \\(y\\) be the number of bicycle owners in our sample, and then use the sample proportion 
                   \\(y/n\\) to estimate \\(\\theta\\). But Bayesian inference will potenitally give us a better estimate."),

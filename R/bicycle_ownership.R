@@ -25,7 +25,8 @@ plotBikeData <- function(df, sample_size_n, num_yes_y){
     geom_dotplot(binwidth = 1/sample_size_n) +  # make each dot 1/sample_size_n in diameter
     theme_bw() + 
     coord_fixed(ylim = c(0, max_height)) +  # fix y-axis
-    scale_y_continuous(NULL, breaks=NULL)  # hide y-axis labels
+    scale_y_continuous(NULL, breaks=NULL) +  # hide y-axis labels
+    labs(x = "Owns a bicycle")
   
   return(p)
 }
