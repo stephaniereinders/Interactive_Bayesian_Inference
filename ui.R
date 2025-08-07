@@ -2,7 +2,7 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 shinyUI(
-  navbarPage("Bayesian Data Analysis",
+  navbarPage("Interactive Bayesian Inference",
     
     ###--- BICYCLE OWNERSHIP TAB ---########################################    
     tabPanel("Bicycle Ownership Example",
