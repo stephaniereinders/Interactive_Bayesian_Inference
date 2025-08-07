@@ -186,27 +186,5 @@ shinyUI(
             )  # end mainPanel 
         )  # end sidebarLayout
     ),  # end tabPanel
-    
-    ###--- PRE-ELECTION POLLING TAB ---######################################## 
-    tabPanel("Bioassay Example",
-        
-        titlePanel("Bioassay Example"),
-        p("This example is based on an example in Bayesian Data Analysis 3rd Edition by Chapman and Hall."),
-        withMathJax(),
-             
-        #--- Sidebar
-        sidebarLayout(
-          sidebarPanel(
-            
-          ),  # end sidebarPanel
-          
-          mainPanel(
-            h4("Data"),
-            tableOutput("bio_df")
-          )  # end mainPanel
-        )  # end sidebarLayout
-    )  # end tabPanel
-    
-    
   )  # end navbarPage
 )  # end shinyUI

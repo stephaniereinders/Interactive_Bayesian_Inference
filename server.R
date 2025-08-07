@@ -46,16 +46,6 @@ shinyServer(function(input, output) {
     paste("The plot shows the result of a random sample drawn from a Bernouilli distribution with sample size \\(n\\) =", bike_vars$n, "and true probability of ownership \\(\\theta\\) =", bike_vars$theta)
   })
   
-  # Count and display sample size
-  output$bike_binom_num_trials <- renderText({
-    paste("Sample size:  n =", bike_vars$n)
-  })
-  
-  # Count and display number of yeses
-  output$bike_binom_num_yes_responses <- renderText({
-    paste("Number of yes responses in n observations:  y =", bike_vars$y)
-  })
-  
   # Display dotplot of data
   output$bike_dotplot <- renderPlot({
     plotBikeData(df = bike_df(), sample_size_n = bike_vars$n, num_yes_y = bike_vars$y)
@@ -251,26 +241,5 @@ shinyServer(function(input, output) {
   output$election_simulation_posterior_prob2 <- renderUI({
     p(withMathJax(sprintf("Estimated posterior probability that Candidate 2 has more support than 
                               Candidate 1: \\(%0.03f\\)%%", election_vars$posterior_prob2)))
-  })
-  
-  
-  ###--- BIOASSAY EXAMPLE ---########################################
-  
-  # Create data
-  bio_df <- reactive({
-    # NOTE: doesn't react to any inputs
-    xi <- c(-0.86, -0.30, -0.05, 0.73)
-    ni <- c(5, 5, 5, 5)
-    yi <- c(0, 1, 3, 5)
-    df <- data.frame("xi" = xi, "ni" = ni, "yi" = yi)
-  })
-  
-  # Display data
-  output$bio_df <- renderTable({
-    df <- bio_df()
-    # give 'nice' column names
-    df %>% dplyr::rename("Dose, xi (log g/ml)" = "xi",
-                         "Number of animals, ni" = "ni",
-                         "Number of deaths, yi" = "yi")
   })
 })
