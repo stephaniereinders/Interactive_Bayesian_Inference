@@ -105,7 +105,7 @@ shinyUI(
     tabPanel("Pre-Election Polling Example",
              
         titlePanel("Pre-Election Polling"),
-        p("This example is based on an example in Bayesian Data Analysis 3rd Edition by Chapman and Hall."),
+        p("This interactive tool simulates pre-election support for two candidates and demonstrates Bayesian inference by estimating the true difference in support between the two candidates."),
         withMathJax(),
         
         #--- Sidebar
@@ -119,11 +119,11 @@ shinyUI(
                 
                 h4("Survey Responses"),
                 numericInput(inputId = "election_n", label = "Sample size", 
-                             min = 5, max = 5000, value = 1447, step = 1),
+                             min = 5, max = 5000, value = 1000, step = 1),
                 numericInput(inputId = "election_y1", label = "Supports Candidate 1",
-                            min = 0, max = 1447, value = 727, step = 1),
+                            min = 0, max = 1447, value = 730, step = 1),
                 numericInput(inputId = "election_y2", label = "Supports Candidate 2", 
-                            min = 0, max = 1447, value = 583, step = 1),
+                            min = 0, max = 1447, value = 200, step = 1),
                 p(strong("No Opinion")),
                 uiOutput("election_y3"),
                 helpText("Adjust candidate values so that 'No Opnion' is not a negative number."),
