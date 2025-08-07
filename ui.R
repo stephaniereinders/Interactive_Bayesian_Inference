@@ -8,7 +8,7 @@ shinyUI(
     tabPanel("Bicycle Ownership Example",
 
         titlePanel("Estimating the Proportion of Bicycle Owners in Ames, Iowa"),
-        p("This example is based on an example of estimating female birth in Bayesian Data Analysis 3rd Edition by Chapman and Hall."),
+        p("This interactive tool simulates bicycle ownership data for Ames, Iowa residents and demonstrates Bayesian inference by estimating the true ownership probability from a simulated sample"),
         withMathJax(),
         
         #--- SIDEBAR    
