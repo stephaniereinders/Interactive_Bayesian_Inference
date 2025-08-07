@@ -46,8 +46,7 @@ Analyze support for two candidates plus undecided voters using:
 
 ### Prerequisites
 
-- R (version 3.6 or higher)
-- RStudio (recommended)
+Follow the [instructions](https://posit.co/download/rstudio-desktop/) to download and install R and RStudio.
 
 ### Required Packages
 Install required R packages.
