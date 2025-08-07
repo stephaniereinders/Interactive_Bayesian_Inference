@@ -60,7 +60,7 @@ shinyUI(
             mainPanel(
                 tabsetPanel(
                     tabPanel("Simulated Data",
-                             p("---Add description of dotplot.---"),
+                             textOutput("bike_plot_description"),
                              plotOutput("bike_dotplot"),
                     ),  # end tabPanel
                     
