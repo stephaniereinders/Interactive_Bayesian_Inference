@@ -63,18 +63,23 @@ install.packages(c(
 
 ### Running the App
 
-#### Option 1: Local Installation
+#### Option 1: Direct from GitHub
+
+Download and launch the Shiny application directly from GitHub.
+
+```r
+shiny::runGitHub("interactive-bayesian-inference", "stephaniereinders")
+```
+
+#### Option 2: Local Installation
+
+Create a local version of the Shiny application by cloning the GitHub repository.
 
 1. Clone the GitHub repository [stephaniereinders/interactive-bayesian-inference](https://github.com/stephaniereinders/interactive-bayesian-inference).
 
 2. Open R/RStudio and run:
 ```r
 shiny::runApp()
-```
-
-#### Option 2: Direct from GitHub
-```r
-shiny::runGitHub("interactive-bayesian-inference", "stephaniereinders")
 ```
 
 ## Usage Guide
