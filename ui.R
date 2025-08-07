@@ -17,8 +17,6 @@ shinyUI(
                 h4("What proportion of residents in Ames own a bicycle?"),
                 p("We want to estimate the proportion \\(\\theta\\) of bicycle owners in Ames."),
                 
-                
-                
                 h4("Survey"),
                 p("Instead of surveying every single Ames resident, we could ask a random sample of  \\(n\\) residents whether or not they own
                  a bicycle."),
@@ -34,15 +32,12 @@ shinyUI(
                 
                 p("Our end goal is to estimate the proportion \\(\\theta\\) of residents that own a bike. 
                   We could let \\(y\\) be the number of bicycle owners in our sample, and then use the sample proportion 
-                  \\(y/n\\) to estimate \\(\\theta\\). But Bayesian inference will give us a 
-                  (better? more accurate?) estimate."),
+                  \\(y/n\\) to estimate \\(\\theta\\). But Bayesian inference will potenitally give us a better estimate."),
                 
                 h4("Generate Simulated Survey Responses"),
                 p("In order to illustrate how Bayesian inference works on different data, let's simulate the results of asking a sample of \\(n\\) 
                   Ames residents whether they own a bicycle by performing \\(n\\) Bernouilli trials."),
                   
-                
-                
                 p("Use the sliders below to generate data for various sample sizes and probabilities of bicycle ownership."),
                 sliderInput(inputId = "bike_n",
                             label = "Sample size \\(n\\):",
