@@ -173,6 +173,7 @@ GitHub repository: https://github.com/stephaniereinders/interactive-bayesian-inf
 
 ## Contact
 
+- **Email**: <reinders.stephanie@gmail.com>
 - **GitHub**: [@stephaniereinders](https://github.com/stephaniereinders)
 
 ---
