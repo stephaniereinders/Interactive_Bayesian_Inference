@@ -173,7 +173,6 @@ GitHub repository: https://github.com/stephaniereinders/interactive-bayesian-inf
 
 ## Contact
 
-- **Author**: [Stephanie Reinders](reinders.stephanie@gmail.com)
 - **GitHub**: [@stephaniereinders](https://github.com/stephaniereinders)
 
 ---
