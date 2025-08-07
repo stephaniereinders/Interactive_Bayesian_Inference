@@ -69,8 +69,7 @@ shinyUI(
                              p("We will use Bayesian inference on our simulated data to estimate \\(\\theta\\)."),
                              
                              h4("Prior Distribution"),
-                             p("(The prior distribution allows to account for prior information about \\(\\theta\\)?)
-                                      Let's use the uniform distribution on the interval [0,1] as the prior distribution \\(p(\\theta)\\)."),
+                             p("Let's use the uniform distribution on the interval [0,1] as the prior distribution \\(p(\\theta)\\)."),
                              p("Prior distribution: \\(p(\\theta) = 1\\)"),
                              hr(),
                              
